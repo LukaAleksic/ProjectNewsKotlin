@@ -15,23 +15,25 @@ class ReadNewsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_news_viewer)
         setSupportActionBar(toolbar)
-        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         if (savedInstanceState == null) {
-            val fragment = ReadNewsFragment()
-            supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.getSimpleName())
-                .commit()
+            navigationToHeadLines()
         }
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
         when (menuItem.itemId) {
             R.id.navigation_top_headlines -> {
-                val fragment = ReadNewsFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.getSimpleName())
-                    .commit()
+                navigationToHeadLines()
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
+    }
+
+    private fun navigationToHeadLines(){
+        val fragment = ReadNewsFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.getSimpleName())
+            .commit()
     }
 }
