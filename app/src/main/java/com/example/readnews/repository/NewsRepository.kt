@@ -2,20 +2,24 @@ package com.example.readnews.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import com.example.readnews.BuildConfig
+import com.example.readnews.BuildConfig.BASE_URL
 import com.example.readnews.database.NewsDatabase
-import com.example.readnews.database.asDomainModel
+import com.example.readnews.database.NewsMapper
 import com.example.readnews.domain.Article
-import com.example.readnews.network.ReadNewsNetwork
-import com.example.readnews.network.asDatabaseModel
+import com.example.readnews.network.ApiProvider
+import com.example.readnews.network.ReadNewsService
+import com.example.readnews.util.APIKEY
+import com.example.readnews.util.FRCOUNTRY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
-class NewsRepository(private val database: NewsDatabase) {
+class NewsRepository(private val database: NewsDatabase, private val apiProvider: ApiProvider = ApiProvider()) {
 
     val news: LiveData<List<Article>> = Transformations.map(database.newsDao.getNews()) {
-        it.asDomainModel()
+        NewsMapper.listDatabaseNewsasDomainModel(it)
     }
     /**
      * Refresh the news stored in the offline cache.
@@ -29,13 +33,12 @@ class NewsRepository(private val database: NewsDatabase) {
         withContext(Dispatchers.IO) {
             Timber.d("getJournal start")
             try {
-                val journal = ReadNewsNetwork.readnews.getJournal(
-                    "fr",
-                   //"business",
-                    "2c64fe5d063645f58a5cd563308d0e7c"
+                val journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
+                    FRCOUNTRY,
+                    APIKEY
                 )
                 Timber.d("getJournal done")
-                database.newsDao.insertAll(journal.asDatabaseModel())
+                database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
             }
             catch(e: Exception){
                 Timber.e(e.toString())

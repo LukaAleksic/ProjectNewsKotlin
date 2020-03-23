@@ -32,20 +32,3 @@ data class NetworkNews(
     val publishedAt: String,
     @Json(name="content") val content: String? = null)
 
-
-/**
- * Convert Network results to database objects
- */
-fun NetworkNewsContainer.asDatabaseModel(): List<DatabaseNews> {
-    return articles.map {
-        DatabaseNews(
-            //source = it.source,
-            author = it.author,
-            title = it.title,
-            description = it.description,
-            url = it.url,
-            urlToImage = it.urlToImage,
-            publishedAt = it.publishedAt,
-            content = it.content)
-    }
-}

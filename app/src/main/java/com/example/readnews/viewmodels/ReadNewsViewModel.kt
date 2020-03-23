@@ -2,12 +2,9 @@
 package com.example.readnews.viewmodels
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.readnews.database.getDatabase
 import com.example.readnews.repository.NewsRepository
 import kotlinx.coroutines.*
@@ -102,16 +99,6 @@ class ReadNewsViewModel(application: Application) : AndroidViewModel(application
         viewModelJob.cancel()
     }
 
-
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(ReadNewsViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return ReadNewsViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
 
     /**
      * The data source this ViewModel will fetch results from.

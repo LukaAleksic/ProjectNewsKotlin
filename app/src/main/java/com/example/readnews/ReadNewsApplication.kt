@@ -3,12 +3,14 @@ package com.example.readnews
 import android.app.Application
 import android.os.Build
 import androidx.work.*
+import com.example.readnews.util.PERIODIC_REQUEST_TIME_INTERVAL_MIN
 import com.example.readnews.work.RefreshDataWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+
 
 /**
  * Override application to setup background work via WorkManager
@@ -38,7 +40,7 @@ class ReadNewsApplication : Application() {
             }
             .build()
 
-        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(15, TimeUnit.MINUTES)
+        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(PERIODIC_REQUEST_TIME_INTERVAL_MIN, TimeUnit.MINUTES)
             .setConstraints(constraints)
             .build()
 

@@ -4,6 +4,7 @@ package com.example.readnews.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.readnews.util.DB_NAME
 
 @Dao
 interface NewsDao {
@@ -18,17 +19,17 @@ interface NewsDao {
 abstract class NewsDatabase: RoomDatabase() {
     abstract val newsDao: NewsDao
 }
-private lateinit var INSTANCE: NewsDatabase
+private lateinit var instance: NewsDatabase
 
 fun getDatabase(context: Context): NewsDatabase {
     synchronized(NewsDatabase::class.java) {
-        if (!::INSTANCE.isInitialized) {
-            INSTANCE = Room.databaseBuilder(context.applicationContext,
+        if (!::instance.isInitialized) {
+            instance = Room.databaseBuilder(context.applicationContext,
                     NewsDatabase::class.java,
-                    "news")
+                    DB_NAME)
                     .fallbackToDestructiveMigration()
                     .build()
         }
     }
-    return INSTANCE
+    return instance
 }

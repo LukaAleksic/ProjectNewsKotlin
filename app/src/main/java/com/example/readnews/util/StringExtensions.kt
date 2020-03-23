@@ -1,7 +1,6 @@
 package com.example.readnews.util
 
-private val PUNCTUATION = listOf(", ", "; ", ": ", " ")
-
+private val punctuation = listOf(", ", "; ", ": ", " ")
 /**
  * Truncate long text with a preference for word boundaries and without trailing punctuation.
  */
@@ -20,7 +19,7 @@ fun String.smartTruncate(length: Int): String {
         added += 1
     }
 
-    PUNCTUATION.map {
+    punctuation.map {
         if (builder.endsWith(it)) {
             builder.replace(builder.length - it.length, builder.length, "")
         }
