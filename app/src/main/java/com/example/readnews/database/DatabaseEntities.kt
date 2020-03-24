@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class DatabaseNews(
 
-    //val source: String,
     val author: String?,
     val title: String,
     val description: String?,

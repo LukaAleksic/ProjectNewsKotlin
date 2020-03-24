@@ -31,19 +31,13 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
      */
     suspend fun refreshNews() {
         withContext(Dispatchers.IO) {
-            Timber.d("getJournal start")
-            try {
-                val journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
-                    FRCOUNTRY,
-                    APIKEY
-                )
-                Timber.d("getJournal done")
-                database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
-            }
-            catch(e: Exception){
-                Timber.e(e.toString())
-            }
 
+            val journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
+                FRCOUNTRY,
+                APIKEY
+            )
+
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
         }
     }
 }

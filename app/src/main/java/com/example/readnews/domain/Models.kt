@@ -4,7 +4,7 @@ import com.example.readnews.util.TRUNCATE_LENGTH
 import com.example.readnews.util.smartTruncate
 
 
-data class Article(//val source: String,
+data class Article(
     val author: String?,
     val title: String,
     val description: String?,
