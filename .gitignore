@@ -59,5 +59,6 @@ captures/
 #*.keystore
 
 .DS_Store
+.DS_Store?
 .externalNativeBuild
 .cxx
