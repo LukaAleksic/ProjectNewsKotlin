@@ -1,5 +1,5 @@
 
-package com.example.readnews.viewmodels
+package com.example.readnews.headlines
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -12,7 +12,7 @@ import timber.log.Timber
 import java.io.IOException
 
 
-class ReadNewsViewModel(application: Application) : AndroidViewModel(application) {
+class TopHeadlinesViewModel(application: Application) : AndroidViewModel(application) {
 
     /**
      * This is the job for all coroutines started by this ViewModel.

@@ -1,4 +1,4 @@
-package com.example.readnews.readnews
+package com.example.readnews.headlines
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.example.readnews.domain.Article
 /**
  * RecyclerView Adapter for setting up data binding on the items in the list.
  */
-class ReadNewsAdapter(val callback: NewsClick) : RecyclerView.Adapter<ReadNewsViewHolder>() {
+class TopHeadlinesAdapter(val callback: NewsClick) : RecyclerView.Adapter<TopHeadlinesViewHolder>() {
 
     /**
      * The news that our Adapter will show
@@ -27,15 +27,15 @@ class ReadNewsAdapter(val callback: NewsClick) : RecyclerView.Adapter<ReadNewsVi
      * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
      * an item.
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadNewsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopHeadlinesViewHolder {
         val withDataBinding: ReadnewsItemBinding =
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                ReadNewsViewHolder.layout,
+                TopHeadlinesViewHolder.layout,
                 parent,
                 false
             )
-        return ReadNewsViewHolder(withDataBinding)
+        return TopHeadlinesViewHolder(withDataBinding)
     }
 
     override fun getItemCount() = news.size
@@ -45,7 +45,7 @@ class ReadNewsAdapter(val callback: NewsClick) : RecyclerView.Adapter<ReadNewsVi
      * update the contents of the {@link ViewHolder#itemView} to reflect the item at the given
      * position.
      */
-    override fun onBindViewHolder(holder: ReadNewsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TopHeadlinesViewHolder, position: Int) {
         holder.viewDataBinding.also {
             it.news = news[position]
             it.newsCallback = callback

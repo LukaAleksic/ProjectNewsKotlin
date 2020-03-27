@@ -1,4 +1,4 @@
-package com.example.readnews.readnews
+package com.example.readnews.headlines
 
 import android.os.Bundle
 import android.view.*
@@ -10,25 +10,24 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
-import com.example.readnews.databinding.FragmentReadNewsBinding
+import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.domain.Article
-import com.example.readnews.viewmodels.ReadNewsViewModel
 
-class ReadNewsFragment : Fragment() {
+class TopHeadlinesFragment : Fragment() {
 
 
-    private val viewModel: ReadNewsViewModel by lazy {
+    private val viewModel: TopHeadlinesViewModel by lazy {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
         ViewModelProviders.of(this)
-            .get(ReadNewsViewModel::class.java)
+            .get(TopHeadlinesViewModel::class.java)
     }
 
     /**
      * RecyclerView Adapter for converting a list of News to cards.
      */
-    private var viewModelAdapter: ReadNewsAdapter? = null
+    private var viewModelAdapter: TopHeadlinesAdapter? = null
 
     /**
      * Called when the fragment's activity has been created and this
@@ -60,9 +59,9 @@ class ReadNewsFragment : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding: FragmentReadNewsBinding = DataBindingUtil.inflate(
+        val binding: FragmentTopHeadlinesBinding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_read_news,
+            R.layout.fragment_top_headlines,
             container,
             false)
         // Set the lifecycleOwner so DataBinding can observe LiveData
@@ -70,9 +69,10 @@ class ReadNewsFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        viewModelAdapter = ReadNewsAdapter(NewsClick {
-        //TODO(navigation)
-        })
+        viewModelAdapter =
+            TopHeadlinesAdapter(NewsClick {
+                //TODO(navigation)
+            })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context)

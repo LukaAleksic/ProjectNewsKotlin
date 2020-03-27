@@ -1,4 +1,4 @@
-package com.example.readnews.readnews
+package com.example.readnews.headlines
 
 import com.example.readnews.domain.Article
 

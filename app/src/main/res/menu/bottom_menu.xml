@@ -3,11 +3,11 @@
 
     <item
         android:id="@+id/navigation_top_headlines"
-        android:icon="@drawable/equalizer"
+        android:icon="@drawable/ic_top_headlines"
         android:title="@string/top_headlines" />
     <item
         android:id="@+id/navigation_everything"
-        android:icon="@drawable/apps"
+        android:icon="@drawable/ic_everything"
         android:title="@string/everything" />
 
 </menu>

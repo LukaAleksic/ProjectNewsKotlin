@@ -12,7 +12,7 @@
 
         <variable
             name="NewsCallback"
-            type="com.example.readnews.readnews.NewsClick" />
+            type="com.example.readnews.headlines.NewsClick" />
 
     </data>
 
