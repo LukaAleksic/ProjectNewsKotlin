@@ -29,5 +29,5 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/nav_drawer_menu" />
+        app:menu="@menu/bottom_menu" />
 </LinearLayout>
