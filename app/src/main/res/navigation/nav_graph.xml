@@ -7,9 +7,8 @@
 
     <fragment
         android:id="@+id/navigation_top_headlines"
-        android:name="com.example.readnews.readnews.ReadNewsFragment"
-        android:label="fragment_dev_byte"
-        tools:layout="@layout/fragment_read_news" />
+        android:name="com.example.readnews.headlines.TopHeadlinesFragment"
+        tools:layout="@layout/fragment_top_headlines" />
 
     <fragment
         android:id="@+id/navigation_everything"

@@ -1,11 +1,11 @@
-package com.example.readnews.readnews
+package com.example.readnews.headlines
 
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.ReadnewsItemBinding
 
-class ReadNewsViewHolder(val viewDataBinding: ReadnewsItemBinding) :
+class TopHeadlinesViewHolder(val viewDataBinding: ReadnewsItemBinding) :
     RecyclerView.ViewHolder(viewDataBinding.root) {
     companion object {
         @LayoutRes

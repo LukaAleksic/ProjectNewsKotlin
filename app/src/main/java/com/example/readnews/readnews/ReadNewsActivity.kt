@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_read_news_viewer.*
 
 
 class ReadNewsActivity : AppCompatActivity() {
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +28,7 @@ class ReadNewsActivity : AppCompatActivity() {
 
         val navController = host.navController
 
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-
         setupBottomNavMenu(navController)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val retValue = super.onCreateOptionsMenu(menu)
-        return retValue
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

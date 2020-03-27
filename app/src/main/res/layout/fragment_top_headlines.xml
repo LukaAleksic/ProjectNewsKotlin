@@ -4,12 +4,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".readnews.ReadNewsFragment">
+    tools:context=".headlines.TopHeadlinesFragment">
 
     <data>
         <variable
             name="viewModel"
-            type="com.example.readnews.viewmodels.ReadNewsViewModel" />
+            type="com.example.readnews.headlines.TopHeadlinesViewModel" />
     </data>
 
     <FrameLayout
