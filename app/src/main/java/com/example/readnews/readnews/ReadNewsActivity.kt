@@ -1,27 +1,17 @@
 package com.example.readnews.readnews
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.example.readnews.R
-import com.example.readnews.databinding.FragmentTopHeadlinesBinding
-import com.example.readnews.headlines.TopHeadlinesViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_read_news_viewer.*
-import kotlinx.android.synthetic.main.fragment_top_headlines.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+
 
 
 class ReadNewsActivity : AppCompatActivity() {

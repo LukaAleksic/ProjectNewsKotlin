@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.domain.Article
-import kotlinx.android.synthetic.main.fragment_top_headlines.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
