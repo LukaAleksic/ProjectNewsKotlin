@@ -2,38 +2,55 @@ package com.example.readnews.readnews
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupWithNavController
 import com.example.readnews.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_read_news_viewer.*
 import kotlinx.android.synthetic.main.fragment_read_news.*
 
 
 class ReadNewsActivity : AppCompatActivity() {
+    private lateinit var appBarConfiguration : AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_news_viewer)
+
         setSupportActionBar(toolbar)
-        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        if (savedInstanceState == null) {
-            navigationToHeadLines()
-        }
+
+        val host: NavHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
+
+        val navController = host.navController
+
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        setupBottomNavMenu(navController)
     }
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
-        when (menuItem.itemId) {
-            R.id.navigation_top_headlines -> {
-                navigationToHeadLines()
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val retValue = super.onCreateOptionsMenu(menu)
+        return retValue
     }
 
-    private fun navigationToHeadLines(){
-        val fragment = ReadNewsFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.getSimpleName())
-            .commit()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(findNavController(R.id.nav_host_fragment))
+                || super.onOptionsItemSelected(item)
     }
+
+    private fun setupBottomNavMenu(navController: NavController) {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNav?.setupWithNavController(navController)
+    }
+
 }
