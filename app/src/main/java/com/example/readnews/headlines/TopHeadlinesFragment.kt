@@ -2,6 +2,7 @@ package com.example.readnews.headlines
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -12,6 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.domain.Article
+import kotlinx.android.synthetic.main.fragment_top_headlines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class TopHeadlinesFragment : Fragment() {
 
@@ -84,6 +90,27 @@ class TopHeadlinesFragment : Fragment() {
         viewModel.eventNetworkError.observe(this, Observer{ isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
+
+        binding.root.findViewById<Button>(R.id.filterButton).setOnClickListener {
+            val viewModelJob = SupervisorJob()
+            val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+            viewModelScope.launch(Dispatchers.Main){
+                val business :String
+                val country : String
+                binding.apply {
+                    business = businessFilter.text.toString()
+                    country = countryFilter.text.toString()
+                }
+                if(country == ""){
+                    Toast.makeText(activity, getString(R.string.error_empty_country), Toast.LENGTH_LONG)
+                        .show()
+                }
+                else {
+                    viewModel.filter(business, country)
+                }
+            }
+        }
 
         return binding.root
     }

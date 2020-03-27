@@ -110,4 +110,8 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     val journal = newsRepository.news
 
+
+    suspend fun filter(businessFilter:String, countryFilter : String){
+        newsRepository.FilterNews(businessFilter,countryFilter)
+    }
 }

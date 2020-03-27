@@ -8,6 +8,7 @@ import com.example.readnews.database.NewsDatabase
 import com.example.readnews.database.NewsMapper
 import com.example.readnews.domain.Article
 import com.example.readnews.network.ApiProvider
+import com.example.readnews.network.NetworkNewsContainer
 import com.example.readnews.network.ReadNewsService
 import com.example.readnews.util.APIKEY
 import com.example.readnews.util.FRCOUNTRY
@@ -37,6 +38,42 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
                 APIKEY
             )
 
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+        }
+    }
+
+    suspend fun FilterNews(businessFilter: String, countryFilter: String){
+        withContext(Dispatchers.IO) {
+            val journal: NetworkNewsContainer
+            var cFilter = countryFilter
+
+            if (countryFilter.equals("france", true) || countryFilter.equals("french", true))
+            {
+                cFilter = "fr"
+            }
+            else if (countryFilter.equals("american", true) || countryFilter.equals("americain", true)|| countryFilter.equals("etats-unis", true)){
+                cFilter = "us"
+            }
+
+            if(businessFilter!= "" && countryFilter!="") {
+                journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java).getJournal(
+                    cFilter,
+                    businessFilter,
+                    APIKEY
+                )
+            }
+            else if(countryFilter!="") {
+                journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
+                    cFilter,
+                    APIKEY)
+            }
+            else{
+                journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
+                    FRCOUNTRY,
+                    APIKEY
+                )
+            }
+            database.newsDao.deleteall()
             database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
         }
     }

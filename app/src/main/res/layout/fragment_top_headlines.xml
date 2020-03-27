@@ -7,34 +7,75 @@
     tools:context=".headlines.TopHeadlinesFragment">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.readnews.headlines.TopHeadlinesViewModel" />
     </data>
 
-    <FrameLayout
-        android:id="@+id/container"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_grey">
+        android:background="@color/background_grey"
+        android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/loading_spinner"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:isNetworkError = "@{safeUnbox(viewModel.eventNetworkError)}"
-            app:playlist = "@{viewModel.journal}"
+            app:layout_constraintTop_toTopOf="parent">
 
-            android:layout_gravity="center" />
+            <EditText
+                android:id="@+id/businessFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="business Filter"
+                android:ems="10"
+                android:hint="@string/business_filter"
+                android:inputType="text" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            <EditText
+                android:id="@+id/countryFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="country Filter"
+                android:ems="10"
+                android:hint="@string/country_filter"
+                android:inputType="text"
+                app:layout_constraintVertical_bias="0.0" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/filterButton"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:text="@string/filter"
+            android:textAlignment="center" />
+
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/readnews_item" />
+            android:background="@color/background_grey">
+
+            <ProgressBar
+                android:id="@+id/loading_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:isNetworkError="@{safeUnbox(viewModel.eventNetworkError)}"
+
+                app:playlist="@{viewModel.journal}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/readnews_item" />
 
 
-    </FrameLayout>
+        </FrameLayout>
+
+    </LinearLayout>
 </layout>
 
 

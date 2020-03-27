@@ -3,4 +3,8 @@
     <string name="everything">Everything</string>
     <string name="top_headlines">Top Headlines</string>
     <string name="network_error">Network Error</string>
+    <string name="filter">Filter</string>
+    <string name="country_filter">Country Filter</string>
+    <string name="business_filter">Business Filter</string>
+    <string name="error_empty_country">Please put a country to filter on</string>
 </resources>
