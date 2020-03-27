@@ -13,5 +13,6 @@
 
     <fragment
         android:id="@+id/navigation_everything"
+        android:name="com.example.readnews.everything.EverythingFragment"
         tools:layout="@layout/fragment_everything" />
 </navigation>
