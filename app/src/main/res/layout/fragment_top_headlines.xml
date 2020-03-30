@@ -32,14 +32,13 @@
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SmallSp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
                 android:id="@+id/countrySpinner"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:entries="@array/country__array"
+                android:entries="@array/country_array"
                 android:gravity="center"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,14 +57,13 @@
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SmallSp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
                 android:id="@+id/businessSpinner"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:entries="@array/business__array"
+                android:entries="@array/business_array"
                 android:gravity="center"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"

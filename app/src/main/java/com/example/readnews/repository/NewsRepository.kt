@@ -43,30 +43,9 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
     suspend fun FilterNews(businessFilter: String, countryFilter: String){
         withContext(Dispatchers.IO) {
             val journal: NetworkNewsContainer
-            var cFilter = countryFilter
-            when(countryFilter){
-                    "Argentina" -> cFilter = "ar"
-                    "Australia"-> cFilter = "au"
-                   "Austria"-> cFilter = "at"
-                   "Belgium"-> cFilter = "be"
-                    "Brazil"-> cFilter = "br"
-                    "Canada"-> cFilter = "ca"
-                    "China"-> cFilter = "cn"
-                    "France"-> cFilter = "fr"
-                    "Germany"-> cFilter = "de"
-                    "Greece"-> cFilter = "gr"
-                    "India"-> cFilter = "in"
-                    "Indonesia"-> cFilter = "id"
-                    "Italy"-> cFilter = "it"
-                    "Japan"-> cFilter = "jp"
-                    "Mexico"-> cFilter = "mx"
-                    "New Zealand"-> cFilter = "nz"
-                    "Singapore"-> cFilter = "sg"
-                    "United Kingdom"-> cFilter = "gb"
-                    "United States"-> cFilter = "us"
-            }
+            val cFilter = getCountryCode(countryFilter)
 
-            if(businessFilter!= "" && countryFilter!="") {
+            if(businessFilter.isNotEmpty()) {
                 journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java).getJournal(
                     cFilter,
                     businessFilter,
@@ -83,5 +62,32 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
             database.newsDao.deleteAll()
             database.newsDao.insertAll(NewsMapper.networkNewsContainerAsDatabaseModel(journal))
         }
+    }
+
+    private fun getCountryCode(countryName: String) : String{
+        var cFilter : String = countryName
+        when(countryName){
+            "Argentina" -> cFilter = "ar"
+            "Australia"-> cFilter = "au"
+            "Austria"-> cFilter = "at"
+            "Belgium"-> cFilter = "be"
+            "Brazil"-> cFilter = "br"
+            "Canada"-> cFilter = "ca"
+            "China"-> cFilter = "cn"
+            "France"-> cFilter = "fr"
+            "Germany"-> cFilter = "de"
+            "Greece"-> cFilter = "gr"
+            "India"-> cFilter = "in"
+            "Indonesia"-> cFilter = "id"
+            "Italy"-> cFilter = "it"
+            "Japan"-> cFilter = "jp"
+            "Mexico"-> cFilter = "mx"
+            "New Zealand"-> cFilter = "nz"
+            "Singapore"-> cFilter = "sg"
+            "United Kingdom"-> cFilter = "gb"
+            "United States"-> cFilter = "us"
+        }
+        return cFilter
+
     }
 }

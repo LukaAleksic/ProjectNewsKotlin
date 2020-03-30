@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.domain.Article
+import com.example.readnews.util.FRANCE_POSITION
 import kotlinx.android.synthetic.main.fragment_top_headlines.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +34,7 @@ class TopHeadlinesFragment : Fragment() {
     /**
      * RecyclerView Adapter for converting a list of News to cards.
      */
-    private var viewModelAdapter: TopHeadlinesAdapter? = null
+    private var topHeadlinesAdapter: TopHeadlinesAdapter? = null
 
     /**
      * Called when the fragment's activity has been created and this
@@ -43,12 +44,12 @@ class TopHeadlinesFragment : Fragment() {
      */
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.journal.observe(viewLifecycleOwner, Observer<List<Article>> { articles ->
+        viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.apply {
-                viewModelAdapter?.news = articles
+                topHeadlinesAdapter?.news = articles
             }
         })
-        countrySpinner.setSelection(7)
+        countrySpinner.setSelection(FRANCE_POSITION)
     }
 
     /**
@@ -72,18 +73,18 @@ class TopHeadlinesFragment : Fragment() {
             container,
             false)
         // Set the lifecycleOwner so DataBinding can observe LiveData
-        binding.setLifecycleOwner(viewLifecycleOwner)
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
 
-        viewModelAdapter =
+        topHeadlinesAdapter =
             TopHeadlinesAdapter(NewsClick {
                 //TODO(navigation)
             })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = viewModelAdapter
+            adapter = topHeadlinesAdapter
         }
 
 

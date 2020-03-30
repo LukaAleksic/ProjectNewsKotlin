@@ -7,11 +7,10 @@
     <string name="country_filter">Country Filter</string>
     <string name="business_filter">Business Filter</string>
     <string name="error_empty_country">Please put a country to filter on</string>
-    <string name="country__prompt">Choose a country(*)</string>
     <string name="country">Country:</string>
     <string name="business">Business:</string>
 
-    <string-array name="country__array">
+    <string-array name="country_array">
         <item>Argentina</item>
         <item>Australia</item>
         <item>Austria</item>
@@ -33,8 +32,8 @@
         <item>United States</item>
     </string-array>
 
-    <string-array name="business__array">
-        <item></item>
+    <string-array name="business_array">
+        <item>""</item>
         <item>business</item>
         <item>entertainment</item>
         <item>health</item>
