@@ -15,7 +15,7 @@ interface NewsDao {
     fun insertAll( news: List<DatabaseNews>)
 
     @Query("DELETE FROM databasenews")
-    fun deleteall()
+    fun deleteAll()
 }
 
 @Database(entities = [DatabaseNews::class], version = 7, exportSchema = false)

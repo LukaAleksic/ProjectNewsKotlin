@@ -29,6 +29,7 @@ class ReadNewsActivity : AppCompatActivity() {
 
         setupBottomNavMenu(navController)
 
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

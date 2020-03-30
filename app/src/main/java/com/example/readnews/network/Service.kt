@@ -11,8 +11,6 @@ interface ReadNewsService {
                    @Query("category") category: String,
                    @Query("apiKey") apiKey : String) : NetworkNewsContainer
 
-    @GET("top-headlines")
-    suspend fun getJournal(@Query("apiKey") apiKey : String) : NetworkNewsContainer
 
     @GET("top-headlines")
     suspend fun getJournal(@Query("country") country: String,

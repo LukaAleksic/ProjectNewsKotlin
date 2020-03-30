@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.domain.Article
+import kotlinx.android.synthetic.main.fragment_top_headlines.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -47,6 +48,7 @@ class TopHeadlinesFragment : Fragment() {
                 viewModelAdapter?.news = articles
             }
         })
+        countrySpinner.setSelection(7)
     }
 
     /**
@@ -98,8 +100,8 @@ class TopHeadlinesFragment : Fragment() {
                 val business :String
                 val country : String
                 binding.apply {
-                    business = businessFilter.text.toString()
-                    country = countryFilter.text.toString()
+                    business = businessSpinner.selectedItem.toString()
+                    country = countrySpinner.selectedItem.toString()
                 }
                 if(country == ""){
                     Toast.makeText(activity, getString(R.string.error_empty_country), Toast.LENGTH_LONG)

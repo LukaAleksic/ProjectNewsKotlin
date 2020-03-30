@@ -2,7 +2,6 @@ package com.example.readnews.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.example.readnews.BuildConfig
 import com.example.readnews.BuildConfig.BASE_URL
 import com.example.readnews.database.NewsDatabase
 import com.example.readnews.database.NewsMapper
@@ -14,13 +13,12 @@ import com.example.readnews.util.APIKEY
 import com.example.readnews.util.FRCOUNTRY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 
 class NewsRepository(private val database: NewsDatabase, private val apiProvider: ApiProvider = ApiProvider()) {
 
     val news: LiveData<List<Article>> = Transformations.map(database.newsDao.getNews()) {
-        NewsMapper.listDatabaseNewsasDomainModel(it)
+        NewsMapper.listDatabaseNewsAsDomainModel(it)
     }
     /**
      * Refresh the news stored in the offline cache.
@@ -38,7 +36,7 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
                 APIKEY
             )
 
-            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerAsDatabaseModel(journal))
         }
     }
 
@@ -46,13 +44,26 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
         withContext(Dispatchers.IO) {
             val journal: NetworkNewsContainer
             var cFilter = countryFilter
-
-            if (countryFilter.equals("france", true) || countryFilter.equals("french", true))
-            {
-                cFilter = "fr"
-            }
-            else if (countryFilter.equals("american", true) || countryFilter.equals("americain", true)|| countryFilter.equals("etats-unis", true)){
-                cFilter = "us"
+            when(countryFilter){
+                    "Argentina" -> cFilter = "ar"
+                    "Australia"-> cFilter = "au"
+                   "Austria"-> cFilter = "at"
+                   "Belgium"-> cFilter = "be"
+                    "Brazil"-> cFilter = "br"
+                    "Canada"-> cFilter = "ca"
+                    "China"-> cFilter = "cn"
+                    "France"-> cFilter = "fr"
+                    "Germany"-> cFilter = "de"
+                    "Greece"-> cFilter = "gr"
+                    "India"-> cFilter = "in"
+                    "Indonesia"-> cFilter = "id"
+                    "Italy"-> cFilter = "it"
+                    "Japan"-> cFilter = "jp"
+                    "Mexico"-> cFilter = "mx"
+                    "New Zealand"-> cFilter = "nz"
+                    "Singapore"-> cFilter = "sg"
+                    "United Kingdom"-> cFilter = "gb"
+                    "United States"-> cFilter = "us"
             }
 
             if(businessFilter!= "" && countryFilter!="") {
@@ -62,19 +73,15 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
                     APIKEY
                 )
             }
-            else if(countryFilter!="") {
-                journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
-                    cFilter,
-                    APIKEY)
-            }
             else{
                 journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
-                    FRCOUNTRY,
+                    cFilter,
                     APIKEY
                 )
             }
-            database.newsDao.deleteall()
-            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+
+            database.newsDao.deleteAll()
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerAsDatabaseModel(journal))
         }
     }
 }

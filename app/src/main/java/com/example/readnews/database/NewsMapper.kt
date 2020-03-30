@@ -8,7 +8,7 @@ object NewsMapper {
     /**
      * Map DatabaseNews to domain entities
      */
-    fun listDatabaseNewsasDomainModel(news : List<DatabaseNews>): List<Article> {
+    fun listDatabaseNewsAsDomainModel(news : List<DatabaseNews>): List<Article> {
         return news.map {
             Article(
                 author = it.author,
@@ -25,7 +25,7 @@ object NewsMapper {
     /**
      * Convert Network results to database objects
      */
-    fun networkNewsContainerasDatabaseModel(news : NetworkNewsContainer): List<DatabaseNews> {
+    fun networkNewsContainerAsDatabaseModel(news : NetworkNewsContainer): List<DatabaseNews> {
         return news.articles.map {
             DatabaseNews(
                 author = it.author,

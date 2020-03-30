@@ -7,4 +7,40 @@
     <string name="country_filter">Country Filter</string>
     <string name="business_filter">Business Filter</string>
     <string name="error_empty_country">Please put a country to filter on</string>
+    <string name="country__prompt">Choose a country(*)</string>
+    <string name="country">Country:</string>
+    <string name="business">Business:</string>
+
+    <string-array name="country__array">
+        <item>Argentina</item>
+        <item>Australia</item>
+        <item>Austria</item>
+        <item>Belgium</item>
+        <item>Brazil</item>
+        <item>Canada</item>
+        <item>China</item>
+        <item>France</item>
+        <item>Germany</item>
+        <item>Greece</item>
+        <item>India</item>
+        <item>Indonesia</item>
+        <item>Italy</item>
+        <item>Japan</item>
+        <item>Mexico</item>
+        <item>New Zealand</item>
+        <item>Singapore</item>
+        <item>United Kingdom</item>
+        <item>United States</item>
+    </string-array>
+
+    <string-array name="business__array">
+        <item></item>
+        <item>business</item>
+        <item>entertainment</item>
+        <item>health</item>
+        <item>science</item>
+        <item>sports</item>
+        <item>technology</item>
+    </string-array>
+
 </resources>
