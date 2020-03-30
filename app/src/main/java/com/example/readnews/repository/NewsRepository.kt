@@ -16,11 +16,15 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
-class NewsRepository(private val database: NewsDatabase, private val apiProvider: ApiProvider = ApiProvider()) {
+class NewsRepository(
+    private val database: NewsDatabase,
+    private val apiProvider: ApiProvider = ApiProvider()
+) {
 
     val news: LiveData<List<Article>> = Transformations.map(database.newsDao.getNews()) {
         NewsMapper.listDatabaseNewsasDomainModel(it)
     }
+
     /**
      * Refresh the news stored in the offline cache.
      *
@@ -32,12 +36,23 @@ class NewsRepository(private val database: NewsDatabase, private val apiProvider
     suspend fun refreshNews() {
         withContext(Dispatchers.IO) {
 
-            val journal = apiProvider.buildApi(BASE_URL,ReadNewsService::class.java).getJournal(
+            val journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java).getJournal(
                 FRCOUNTRY,
                 APIKEY
             )
 
             database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+        }
+    }
+
+    suspend fun refreshNewsEverything() {
+        withContext(Dispatchers.IO) {
+            val journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
+                .getJournalEverything(
+                    APIKEY, "coronavirus"
+                )
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+
         }
     }
 }
