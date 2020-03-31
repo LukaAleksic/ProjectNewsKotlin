@@ -1,9 +1,15 @@
 package com.example.readnews.headlines
 
+import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -12,13 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
-import com.example.readnews.domain.Article
 import com.example.readnews.util.FRANCE_POSITION
 import kotlinx.android.synthetic.main.fragment_top_headlines.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+
 
 class TopHeadlinesFragment : Fragment() {
 
@@ -104,8 +110,8 @@ class TopHeadlinesFragment : Fragment() {
                     business = businessSpinner.selectedItem.toString()
                     country = countrySpinner.selectedItem.toString()
                 }
-                if(country == ""){
-                    Toast.makeText(activity, getString(R.string.error_empty_country), Toast.LENGTH_LONG)
+                if(!mCallback?.verifyAvailableNetwork()!!){
+                    Toast.makeText(activity, getString(R.string.internet_error), Toast.LENGTH_LONG)
                         .show()
                 }
                 else {
@@ -128,6 +134,26 @@ class TopHeadlinesFragment : Fragment() {
                     .show()
                 viewModel.onNetworkErrorShown()
             }
+        }
+    }
+
+    var mCallback: HeadlineListener? = null
+    interface HeadlineListener {
+        fun verifyAvailableNetwork():Boolean
+    }
+
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+
+        // Makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = activity as HeadlineListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(
+                activity.toString()
+                        + " must implement HeadlineListener"
+            )
         }
     }
 }

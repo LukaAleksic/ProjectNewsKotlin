@@ -27,6 +27,8 @@ class ReadNewsApplication : Application() {
         delayedInit()
     }
 
+
+
     /**
      * Setup WorkManager background job to 'fetch' new network data every 15 mins.
      */

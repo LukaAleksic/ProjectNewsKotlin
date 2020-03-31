@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ReadNews</string>
     <string name="everything">Everything</string>
     <string name="top_headlines">Top Headlines</string>
@@ -6,9 +6,9 @@
     <string name="filter">Filter</string>
     <string name="country_filter">Country Filter</string>
     <string name="business_filter">Business Filter</string>
-    <string name="error_empty_country">Please put a country to filter on</string>
     <string name="country">Country:</string>
     <string name="business">Business:</string>
+    <string name="internet_error">Internet error</string>
 
     <string-array name="country_array">
         <item>Argentina</item>
