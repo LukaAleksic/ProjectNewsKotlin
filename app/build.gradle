@@ -101,7 +101,4 @@ dependencies {
     def work_version = "1.0.1"
     implementation "android.arch.work:work-runtime-ktx:$work_version"
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
-
-
 }

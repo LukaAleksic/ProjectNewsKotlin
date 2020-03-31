@@ -1,15 +1,12 @@
 package com.example.readnews.headlines
 
 import android.app.Activity
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -110,12 +107,17 @@ class TopHeadlinesFragment : Fragment() {
                     business = businessSpinner.selectedItem.toString()
                     country = countrySpinner.selectedItem.toString()
                 }
-                if(!mCallback?.verifyAvailableNetwork()!!){
-                    Toast.makeText(activity, getString(R.string.internet_error), Toast.LENGTH_LONG)
-                        .show()
-                }
-                else {
-                    viewModel.filter(business, country)
+                if(callback!=null) {
+                    if (!callback!!.verifyAvailableNetwork()) {
+                        Toast.makeText(
+                            activity,
+                            getString(R.string.internet_error),
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    } else {
+                        viewModel.filter(business, country)
+                    }
                 }
             }
         }
@@ -137,7 +139,7 @@ class TopHeadlinesFragment : Fragment() {
         }
     }
 
-    var mCallback: HeadlineListener? = null
+    var callback: HeadlineListener? = null
     interface HeadlineListener {
         fun verifyAvailableNetwork():Boolean
     }
@@ -148,7 +150,7 @@ class TopHeadlinesFragment : Fragment() {
         // Makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = activity as HeadlineListener
+            callback = activity as HeadlineListener
         } catch (e: ClassCastException) {
             throw ClassCastException(
                 activity.toString()

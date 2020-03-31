@@ -32,7 +32,6 @@ class ReadNewsActivity : AppCompatActivity(), TopHeadlinesFragment.HeadlineListe
 
         setupBottomNavMenu(navController)
 
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
