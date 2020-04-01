@@ -1,12 +1,11 @@
 package com.example.readnews.headlines
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.readnews.database.getDatabase
-import com.example.readnews.network.ResultWrapper
+import com.example.readnews.repository.AbsRepository.ResultWrapper
 import com.example.readnews.repository.NewsRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
@@ -56,6 +55,16 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
 
+
+    private var _eventGenericError = MutableLiveData(false)
+    val eventGenericError: LiveData<Boolean>
+        get() = _eventGenericError
+
+    private var _isGenericErrorShown = MutableLiveData(false)
+
+    val isGenericErrorShown: LiveData<Boolean>
+        get() = _isNetworkErrorShown
+
     /**
      * init{} is called immediately when this ViewModel is created.
      */
@@ -69,13 +78,23 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     private fun refreshDataFromRepository() {
         viewModelScope.launch {
-            val apiResponse = newsRepository.updateNews("", "")
+            val apiResponse = newsRepository.updateNews()
             when (apiResponse) {
                 is ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
                     if (journal.value.isNullOrEmpty())
                         _eventNetworkError.value = true
-                is ResultWrapper.GenericError -> Timber.e(apiResponse.error.toString())
-                is ResultWrapper.Success -> newsRepository.updateDatabase(apiResponse.value)
+                is ResultWrapper.GenericError -> {
+                    Timber.e(apiResponse.error.toString())
+                    _eventGenericError.value = true
+                }
+                is ResultWrapper.Success -> {
+                    newsRepository.updateDatabase(apiResponse.value)
+                    _isNetworkErrorShown.value = false
+                    _eventNetworkError.value = false
+                    _isGenericErrorShown.value = false
+                    _eventGenericError.value = false
+                }
+
             }
         }
     }
@@ -85,6 +104,10 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     fun onNetworkErrorShown() {
         _isNetworkErrorShown.value = true
+    }
+
+    fun onGenericErrorShown() {
+        _isGenericErrorShown.value = true
     }
 
 
@@ -113,9 +136,18 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
             val apiResponse = newsRepository.updateNews(businessFilter, countryFilter)
             when (apiResponse) {
                 is ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
-                    Toast.makeText(getApplication(), "Network error", Toast.LENGTH_LONG).show();
-                is ResultWrapper.GenericError -> Timber.e(apiResponse.error.toString())
-                is ResultWrapper.Success -> newsRepository.updateDatabase(apiResponse.value)
+                    _eventNetworkError.value = true
+                is ResultWrapper.GenericError -> {
+                    Timber.e(apiResponse.error.toString())
+                    _eventGenericError.value = true
+                }
+                is ResultWrapper.Success -> {
+                    newsRepository.updateDatabase(apiResponse.value)
+                    _isNetworkErrorShown.value = false
+                    _eventNetworkError.value = false
+                    _isGenericErrorShown.value = false
+                    _eventGenericError.value = false
+                }
             }
         }
     }

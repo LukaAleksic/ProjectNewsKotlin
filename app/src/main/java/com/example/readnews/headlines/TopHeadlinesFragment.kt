@@ -16,7 +16,6 @@ import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.util.FRANCE_POSITION
 import kotlinx.android.synthetic.main.fragment_top_headlines.*
-import timber.log.Timber
 
 
 class TopHeadlinesFragment : Fragment() {
@@ -94,6 +93,11 @@ class TopHeadlinesFragment : Fragment() {
             if (isNetworkError) onNetworkError()
         })
 
+        // Observer for the generic error.
+        viewModel.eventGenericError.observe(viewLifecycleOwner, Observer { isGenericError ->
+            if (isGenericError) onGenericError()
+        })
+
         binding.root.findViewById<Button>(R.id.filterButton).setOnClickListener {
             val business: String
             val country: String
@@ -116,6 +120,16 @@ class TopHeadlinesFragment : Fragment() {
                 Toast.makeText(activity, getString(R.string.network_error), Toast.LENGTH_LONG)
                     .show()
                 viewModel.onNetworkErrorShown()
+            }
+        }
+    }
+
+    private fun onGenericError() {
+        viewModel.isGenericErrorShown.value?.let { value ->
+            if (!value) {
+                Toast.makeText(activity, getString(R.string.generic_error), Toast.LENGTH_LONG)
+                    .show()
+                viewModel.onGenericErrorShown()
             }
         }
     }

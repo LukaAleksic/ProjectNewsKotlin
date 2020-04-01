@@ -6,6 +6,7 @@ import com.example.readnews.BuildConfig.BASE_URL
 import com.example.readnews.database.DatabaseNews
 import com.example.readnews.database.NewsDatabase
 import com.example.readnews.database.NewsMapper
+import com.example.readnews.repository.AbsRepository.ResultWrapper
 import com.example.readnews.domain.Article
 import com.example.readnews.network.*
 import com.example.readnews.util.APIKEY
@@ -17,7 +18,7 @@ import kotlinx.coroutines.withContext
 class NewsRepository(
     private val database: NewsDatabase,
     private val apiProvider: ApiProvider = ApiProvider()
-) {
+) : AbsRepository() {
 
     val news: LiveData<List<Article>> = Transformations.map(database.newsDao.getNews()) {
         NewsMapper.listDatabaseNewsAsDomainModel(it)
@@ -43,13 +44,19 @@ class NewsRepository(
         }
     }
 
-    suspend fun updateNews(businessFilter: String, countryFilter: String): ResultWrapper<List<DatabaseNews>> {
+    suspend fun updateNews(
+        businessFilter: String ="",
+        countryFilter: String=""
+    ): ResultWrapper<List<DatabaseNews>> {
         return safeApiCall(Dispatchers.IO) {
             NewsMapper.networkNewsContainerAsDatabaseModel(apiAccess(businessFilter, countryFilter))
         }
     }
 
-    private suspend fun apiAccess(businessFilter: String, countryFilter: String): NetworkNewsContainer {
+    private suspend fun apiAccess(
+        businessFilter: String,
+        countryFilter: String
+    ): NetworkNewsContainer {
         val journal: NetworkNewsContainer
         val cFilter = getCountryCode(countryFilter)
 

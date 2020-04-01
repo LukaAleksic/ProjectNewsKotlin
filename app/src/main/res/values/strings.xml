@@ -3,6 +3,7 @@
     <string name="everything">Everything</string>
     <string name="top_headlines">Top Headlines</string>
     <string name="network_error">Network Error</string>
+    <string name="generic_error">An unknown error has occurred</string>
     <string name="filter">Filter</string>
     <string name="country_filter">Country Filter</string>
     <string name="business_filter">Business Filter</string>
