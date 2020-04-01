@@ -9,13 +9,14 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.util.FRANCE_POSITION
 import kotlinx.android.synthetic.main.fragment_top_headlines.*
+import timber.log.Timber
 
 
 class TopHeadlinesFragment : Fragment() {
@@ -25,7 +26,7 @@ class TopHeadlinesFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
-        ViewModelProviders.of(this)
+        ViewModelProvider(this)
             .get(TopHeadlinesViewModel::class.java)
     }
 
@@ -89,7 +90,7 @@ class TopHeadlinesFragment : Fragment() {
         }
 
         // Observer for the network error.
-        viewModel.eventNetworkError.observe(this, Observer { isNetworkError ->
+        viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer { isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
 
