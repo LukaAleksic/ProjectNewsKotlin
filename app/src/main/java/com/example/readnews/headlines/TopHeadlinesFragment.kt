@@ -1,6 +1,5 @@
 package com.example.readnews.headlines
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +16,6 @@ import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.util.FRANCE_POSITION
 import kotlinx.android.synthetic.main.fragment_top_headlines.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 
 class TopHeadlinesFragment : Fragment() {
@@ -68,13 +63,16 @@ class TopHeadlinesFragment : Fragment() {
      *
      * @return Return the View for the fragment's UI.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding: FragmentTopHeadlinesBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_top_headlines,
             container,
-            false)
+            false
+        )
         // Set the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -90,41 +88,23 @@ class TopHeadlinesFragment : Fragment() {
             adapter = topHeadlinesAdapter
         }
 
-
         // Observer for the network error.
-        viewModel.eventNetworkError.observe(this, Observer{ isNetworkError ->
+        viewModel.eventNetworkError.observe(this, Observer { isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
 
         binding.root.findViewById<Button>(R.id.filterButton).setOnClickListener {
-            val viewModelJob = SupervisorJob()
-            val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
-            viewModelScope.launch(Dispatchers.Main){
-                val business :String
-                val country : String
-                binding.apply {
-                    business = businessSpinner.selectedItem.toString()
-                    country = countrySpinner.selectedItem.toString()
-                }
-                if(callback!=null) {
-                    if (!callback!!.verifyAvailableNetwork()) {
-                        Toast.makeText(
-                            activity,
-                            getString(R.string.internet_error),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    } else {
-                        viewModel.filter(business, country)
-                    }
-                }
+            val business: String
+            val country: String
+            binding.apply {
+                business = businessSpinner.selectedItem.toString()
+                country = countrySpinner.selectedItem.toString()
             }
+            viewModel.filter(business, country)
         }
 
         return binding.root
     }
-
 
     /**
      * Method for displaying a Toast error message for network errors.
@@ -136,26 +116,6 @@ class TopHeadlinesFragment : Fragment() {
                     .show()
                 viewModel.onNetworkErrorShown()
             }
-        }
-    }
-
-    var callback: HeadlineListener? = null
-    interface HeadlineListener {
-        fun verifyAvailableNetwork():Boolean
-    }
-
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-
-        // Makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            callback = activity as HeadlineListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                activity.toString()
-                        + " must implement HeadlineListener"
-            )
         }
     }
 }

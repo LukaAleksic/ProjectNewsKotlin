@@ -1,6 +1,7 @@
 package com.example.readnews.util
 
 private val punctuation = listOf(", ", "; ", ": ", " ")
+
 /**
  * Truncate long text with a preference for word boundaries and without trailing punctuation.
  */

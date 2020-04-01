@@ -4,5 +4,6 @@
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">20dp</dimen>
     <dimen name="design_bottom_navigation_item_max_width" tools:override="true">600dp</dimen>
     <dimen name="design_bottom_navigation_active_item_max_width" tools:override="true">600dp</dimen>
+    <dimen name="base_padding">4dp</dimen>
 
 </resources>

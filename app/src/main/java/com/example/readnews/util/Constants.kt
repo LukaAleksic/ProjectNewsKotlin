@@ -1,6 +1,6 @@
 package com.example.readnews.util
 
-const val PERIODIC_REQUEST_TIME_INTERVAL_MIN:Long = 60
+const val PERIODIC_REQUEST_TIME_INTERVAL_MIN: Long = 60
 const val DB_NAME = "news"
 const val TRUNCATE_LENGTH = 130
 const val FRCOUNTRY = "fr"

@@ -1,4 +1,3 @@
-
 package com.example.readnews.database
 
 import android.content.Context
@@ -12,26 +11,29 @@ interface NewsDao {
     fun getNews(): LiveData<List<DatabaseNews>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll( news: List<DatabaseNews>)
+    fun insertAll(news: List<DatabaseNews>)
 
     @Query("DELETE FROM databasenews")
     fun deleteAll()
 }
 
 @Database(entities = [DatabaseNews::class], version = 7, exportSchema = false)
-abstract class NewsDatabase: RoomDatabase() {
+abstract class NewsDatabase : RoomDatabase() {
     abstract val newsDao: NewsDao
 }
+
 private lateinit var instance: NewsDatabase
 
 fun getDatabase(context: Context): NewsDatabase {
     synchronized(NewsDatabase::class.java) {
         if (!::instance.isInitialized) {
-            instance = Room.databaseBuilder(context.applicationContext,
-                    NewsDatabase::class.java,
-                    DB_NAME)
-                    .fallbackToDestructiveMigration()
-                    .build()
+            instance = Room.databaseBuilder(
+                context.applicationContext,
+                NewsDatabase::class.java,
+                DB_NAME
+            )
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
     return instance

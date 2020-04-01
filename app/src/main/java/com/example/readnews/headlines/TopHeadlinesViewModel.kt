@@ -1,15 +1,15 @@
-
 package com.example.readnews.headlines
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.readnews.database.getDatabase
+import com.example.readnews.network.ResultWrapper
 import com.example.readnews.repository.NewsRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.io.IOException
 
 
 class TopHeadlinesViewModel(application: Application) : AndroidViewModel(application) {
@@ -69,16 +69,13 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     private fun refreshDataFromRepository() {
         viewModelScope.launch {
-            try {
-                newsRepository.refreshNews()
-                Timber.d("Refresh")
-                _eventNetworkError.value = false
-                _isNetworkErrorShown.value = false
-
-            } catch (networkError: IOException) {
-                // Show a Toast error message and hide the progress bar.
-                if(journal.value.isNullOrEmpty())
-                    _eventNetworkError.value = true
+            val apiResponse = newsRepository.updateNews("", "")
+            when (apiResponse) {
+                is ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
+                    if (journal.value.isNullOrEmpty())
+                        _eventNetworkError.value = true
+                is ResultWrapper.GenericError -> Timber.e(apiResponse.error.toString())
+                is ResultWrapper.Success -> newsRepository.updateDatabase(apiResponse.value)
             }
         }
     }
@@ -111,7 +108,15 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
     val journal = newsRepository.news
 
 
-    suspend fun filter(businessFilter:String, countryFilter : String){
-        newsRepository.FilterNews(businessFilter,countryFilter)
+    fun filter(businessFilter: String, countryFilter: String) {
+        viewModelScope.launch {
+            val apiResponse = newsRepository.updateNews(businessFilter, countryFilter)
+            when (apiResponse) {
+                is ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
+                    Toast.makeText(getApplication(), "Network error", Toast.LENGTH_LONG).show();
+                is ResultWrapper.GenericError -> Timber.e(apiResponse.error.toString())
+                is ResultWrapper.Success -> newsRepository.updateDatabase(apiResponse.value)
+            }
+        }
     }
 }

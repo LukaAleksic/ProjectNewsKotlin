@@ -22,6 +22,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/base_padding"
+            android:paddingTop="@dimen/base_padding"
+            android:paddingEnd="@dimen/base_padding"
+            android:paddingBottom="@dimen/base_padding"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -45,9 +49,14 @@
                 app:layout_constraintStart_toEndOf="@id/countryText"
                 tools:layout_editor_absoluteY="0dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/base_padding"
+            android:paddingTop="@dimen/base_padding"
+            android:paddingEnd="@dimen/base_padding"
+            android:paddingBottom="@dimen/base_padding">
 
             <TextView
                 android:id="@+id/businessText"
