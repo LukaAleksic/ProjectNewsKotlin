@@ -47,7 +47,7 @@ class EverythingAdapter() : RecyclerView.Adapter<EverythingViewHolder>() {
      */
     override fun onBindViewHolder(holder: EverythingViewHolder, position: Int) {
         holder.viewDataBinding.also {
-            it.news = news[news.lastIndex-position]
+            it.news = news[position]
         }
     }
 
