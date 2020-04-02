@@ -2,7 +2,6 @@ package com.example.readnews.everything
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentEverythingBinding
-import com.example.readnews.domain.Article
+import com.google.android.material.snackbar.Snackbar
 
 class EverythingFragment : Fragment() {
 
@@ -93,7 +92,7 @@ class EverythingFragment : Fragment() {
     private fun onNetworkError() {
         viewModel.isNetworkErrorShown.value?.let { value ->
             if (!value) {
-                Toast.makeText(activity, getString(R.string.network_error), Toast.LENGTH_LONG)
+                Snackbar.make(view!!, getString(R.string.network_error), Snackbar.LENGTH_LONG)
                     .show()
                 viewModel.onNetworkErrorShown()
             }

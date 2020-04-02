@@ -12,7 +12,7 @@
             type="com.example.readnews.everything.EverythingViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,10 +22,14 @@
             android:id="@+id/loading_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:isNetworkError = "@{safeUnbox(viewModel.eventNetworkError)}"
-            app:playlist = "@{viewModel.journal}"
+            android:layout_gravity="center"
+            app:isNetworkError="@{safeUnbox(viewModel.eventNetworkError)}"
 
-            android:layout_gravity="center" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:playlist="@{viewModel.journal}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -34,7 +38,7 @@
             tools:listitem="@layout/readnews_item" />
 
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
 
