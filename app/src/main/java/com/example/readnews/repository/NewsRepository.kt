@@ -108,5 +108,14 @@ class NewsRepository(
         }
         return cFilter
 
+    suspend fun refreshNewsEverything() {
+        withContext(Dispatchers.IO) {
+            val journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
+                .getJournalEverything(
+                    APIKEY, "coronavirus"
+                )
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+
+        }
     }
 }

@@ -21,7 +21,7 @@ interface ReadNewsService {
     ): NetworkNewsContainer
 
     @GET("everything")
-    suspend fun getJournalEverything(@Query("apiKey") apiKey: String): NetworkNewsContainer
+    suspend fun getJournalEverything(@Query("apiKey") apiKey : String,@Query("q") q: String) : NetworkNewsContainer
 
 }
 
