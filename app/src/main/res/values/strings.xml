@@ -3,4 +3,44 @@
     <string name="everything">Everything</string>
     <string name="top_headlines">Top Headlines</string>
     <string name="network_error">Network Error</string>
+    <string name="generic_error">An unknown error has occurred</string>
+    <string name="filter">Filter</string>
+    <string name="country_filter">Country Filter</string>
+    <string name="business_filter">Business Filter</string>
+    <string name="country">Country:</string>
+    <string name="business">Business:</string>
+    <string name="internet_error">Internet error</string>
+
+    <string-array name="country_array">
+        <item>Argentina</item>
+        <item>Australia</item>
+        <item>Austria</item>
+        <item>Belgium</item>
+        <item>Brazil</item>
+        <item>Canada</item>
+        <item>China</item>
+        <item>France</item>
+        <item>Germany</item>
+        <item>Greece</item>
+        <item>India</item>
+        <item>Indonesia</item>
+        <item>Italy</item>
+        <item>Japan</item>
+        <item>Mexico</item>
+        <item>New Zealand</item>
+        <item>Singapore</item>
+        <item>United Kingdom</item>
+        <item>United States</item>
+    </string-array>
+
+    <string-array name="business_array">
+        <item>""</item>
+        <item>business</item>
+        <item>entertainment</item>
+        <item>health</item>
+        <item>science</item>
+        <item>sports</item>
+        <item>technology</item>
+    </string-array>
+
 </resources>

@@ -1,4 +1,3 @@
-
 package com.example.readnews.headlines
 
 import android.app.Application
@@ -6,10 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.readnews.database.getDatabase
+import com.example.readnews.repository.AbsRepository.ResultWrapper
 import com.example.readnews.repository.NewsRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.io.IOException
 
 
 class TopHeadlinesViewModel(application: Application) : AndroidViewModel(application) {
@@ -56,6 +55,16 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
 
+
+    private var _eventGenericError = MutableLiveData(false)
+    val eventGenericError: LiveData<Boolean>
+        get() = _eventGenericError
+
+    private var _isGenericErrorShown = MutableLiveData(false)
+
+    val isGenericErrorShown: LiveData<Boolean>
+        get() = _isNetworkErrorShown
+
     /**
      * init{} is called immediately when this ViewModel is created.
      */
@@ -69,16 +78,23 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     private fun refreshDataFromRepository() {
         viewModelScope.launch {
-            try {
-                newsRepository.refreshNews()
-                Timber.d("Refresh")
-                _eventNetworkError.value = false
-                _isNetworkErrorShown.value = false
+            val apiResponse = newsRepository.updateNews()
+            when (apiResponse) {
+                is ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
+                    if (journal.value.isNullOrEmpty())
+                        _eventNetworkError.value = true
+                is ResultWrapper.GenericError -> {
+                    Timber.e(apiResponse.error.toString())
+                    _eventGenericError.value = true
+                }
+                is ResultWrapper.Success -> {
+                    newsRepository.updateDatabase(apiResponse.value)
+                    _isNetworkErrorShown.value = false
+                    _eventNetworkError.value = false
+                    _isGenericErrorShown.value = false
+                    _eventGenericError.value = false
+                }
 
-            } catch (networkError: IOException) {
-                // Show a Toast error message and hide the progress bar.
-                if(journal.value.isNullOrEmpty())
-                    _eventNetworkError.value = true
             }
         }
     }
@@ -88,6 +104,10 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     fun onNetworkErrorShown() {
         _isNetworkErrorShown.value = true
+    }
+
+    fun onGenericErrorShown() {
+        _isGenericErrorShown.value = true
     }
 
 
@@ -110,4 +130,25 @@ class TopHeadlinesViewModel(application: Application) : AndroidViewModel(applica
      */
     val journal = newsRepository.news
 
+
+    fun filter(businessFilter: String, countryFilter: String) {
+        viewModelScope.launch {
+            val apiResponse = newsRepository.updateNews(businessFilter, countryFilter)
+            when (apiResponse) {
+                is ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
+                    _eventNetworkError.value = true
+                is ResultWrapper.GenericError -> {
+                    Timber.e(apiResponse.error.toString())
+                    _eventGenericError.value = true
+                }
+                is ResultWrapper.Success -> {
+                    newsRepository.updateDatabase(apiResponse.value)
+                    _isNetworkErrorShown.value = false
+                    _eventNetworkError.value = false
+                    _isGenericErrorShown.value = false
+                    _eventGenericError.value = false
+                }
+            }
+        }
+    }
 }

@@ -1,13 +1,11 @@
 package com.example.readnews.readnews
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.example.readnews.R
@@ -29,6 +27,7 @@ class ReadNewsActivity : AppCompatActivity() {
         val navController = host.navController
 
         setupBottomNavMenu(navController)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,17 +1,22 @@
 package com.example.readnews.headlines
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
-import com.example.readnews.domain.Article
+import com.example.readnews.util.FRANCE_POSITION
+import kotlinx.android.synthetic.main.fragment_top_headlines.*
+
 
 class TopHeadlinesFragment : Fragment() {
 
@@ -20,14 +25,14 @@ class TopHeadlinesFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
-        ViewModelProviders.of(this)
+        ViewModelProvider(this)
             .get(TopHeadlinesViewModel::class.java)
     }
 
     /**
      * RecyclerView Adapter for converting a list of News to cards.
      */
-    private var viewModelAdapter: TopHeadlinesAdapter? = null
+    private var topHeadlinesAdapter: TopHeadlinesAdapter? = null
 
     /**
      * Called when the fragment's activity has been created and this
@@ -37,11 +42,12 @@ class TopHeadlinesFragment : Fragment() {
      */
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.journal.observe(viewLifecycleOwner, Observer<List<Article>> { articles ->
+        viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.apply {
-                viewModelAdapter?.news = articles
+                topHeadlinesAdapter?.news = articles
             }
         })
+        countrySpinner.setSelection(FRANCE_POSITION)
     }
 
     /**
@@ -57,37 +63,53 @@ class TopHeadlinesFragment : Fragment() {
      *
      * @return Return the View for the fragment's UI.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding: FragmentTopHeadlinesBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_top_headlines,
             container,
-            false)
+            false
+        )
         // Set the lifecycleOwner so DataBinding can observe LiveData
-        binding.setLifecycleOwner(viewLifecycleOwner)
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
 
-        viewModelAdapter =
+        topHeadlinesAdapter =
             TopHeadlinesAdapter(NewsClick {
                 //TODO(navigation)
             })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = viewModelAdapter
+            adapter = topHeadlinesAdapter
         }
 
-
         // Observer for the network error.
-        viewModel.eventNetworkError.observe(this, Observer{ isNetworkError ->
+        viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer { isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
 
+        // Observer for the generic error.
+        viewModel.eventGenericError.observe(viewLifecycleOwner, Observer { isGenericError ->
+            if (isGenericError) onGenericError()
+        })
+
+        binding.root.findViewById<Button>(R.id.filterButton).setOnClickListener {
+            val business: String
+            val country: String
+            binding.apply {
+                business = businessSpinner.selectedItem.toString()
+                country = countrySpinner.selectedItem.toString()
+            }
+            viewModel.filter(business, country)
+        }
+
         return binding.root
     }
-
 
     /**
      * Method for displaying a Toast error message for network errors.
@@ -98,6 +120,16 @@ class TopHeadlinesFragment : Fragment() {
                 Toast.makeText(activity, getString(R.string.network_error), Toast.LENGTH_LONG)
                     .show()
                 viewModel.onNetworkErrorShown()
+            }
+        }
+    }
+
+    private fun onGenericError() {
+        viewModel.isGenericErrorShown.value?.let { value ->
+            if (!value) {
+                Toast.makeText(activity, getString(R.string.generic_error), Toast.LENGTH_LONG)
+                    .show()
+                viewModel.onGenericErrorShown()
             }
         }
     }

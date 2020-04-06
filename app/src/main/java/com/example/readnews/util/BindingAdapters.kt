@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 fun hideIfNetworkError(view: View, isNetworkError: Boolean, journal: Any?) {
     view.visibility = if (journal != null) View.GONE else View.VISIBLE
 
-    if(isNetworkError) {
+    if (isNetworkError) {
         view.visibility = View.GONE
     }
 }
@@ -22,6 +22,6 @@ fun hideIfNetworkError(view: View, isNetworkError: Boolean, journal: Any?) {
  */
 @BindingAdapter("imageUrl")
 fun setImageUrl(imageView: ImageView, url: String?) {
-    if(url !=null)
+    if (url != null)
         Glide.with(imageView.context).load(url).into(imageView)
 }

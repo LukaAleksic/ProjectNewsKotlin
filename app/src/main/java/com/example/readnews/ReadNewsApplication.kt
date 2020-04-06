@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit
 class ReadNewsApplication : Application() {
 
     private val applicationScope = CoroutineScope(Dispatchers.Default)
+
     /**
      * onCreate is called before the first screen is shown to the user.
      *
@@ -26,6 +27,7 @@ class ReadNewsApplication : Application() {
         super.onCreate()
         delayedInit()
     }
+
 
     /**
      * Setup WorkManager background job to 'fetch' new network data every 15 mins.
@@ -40,14 +42,18 @@ class ReadNewsApplication : Application() {
             }
             .build()
 
-        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(PERIODIC_REQUEST_TIME_INTERVAL_MIN, TimeUnit.MINUTES)
+        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(
+            PERIODIC_REQUEST_TIME_INTERVAL_MIN,
+            TimeUnit.MINUTES
+        )
             .setConstraints(constraints)
             .build()
 
         WorkManager.getInstance().enqueueUniquePeriodicWork(
             RefreshDataWorker.WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
-            repeatingRequest)
+            repeatingRequest
+        )
     }
 
     private fun delayedInit() {
