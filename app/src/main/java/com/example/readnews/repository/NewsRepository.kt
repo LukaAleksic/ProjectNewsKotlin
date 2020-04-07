@@ -6,13 +6,13 @@ import com.example.readnews.BuildConfig.BASE_URL
 import com.example.readnews.database.DatabaseNews
 import com.example.readnews.database.NewsDatabase
 import com.example.readnews.database.NewsMapper
-import com.example.readnews.repository.AbsRepository.ResultWrapper
 import com.example.readnews.domain.Article
 import com.example.readnews.network.*
 import com.example.readnews.util.APIKEY
 import com.example.readnews.util.FRCOUNTRY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 class NewsRepository(
@@ -45,8 +45,8 @@ class NewsRepository(
     }
 
     suspend fun updateNews(
-        businessFilter: String ="",
-        countryFilter: String=""
+        businessFilter: String = "",
+        countryFilter: String = ""
     ): ResultWrapper<List<DatabaseNews>> {
         return safeApiCall(Dispatchers.IO) {
             NewsMapper.networkNewsContainerAsDatabaseModel(apiAccess(businessFilter, countryFilter))
@@ -107,15 +107,42 @@ class NewsRepository(
             else -> cFilter = "fr"
         }
         return cFilter
+    }
 
-    suspend fun refreshNewsEverything() {
-        withContext(Dispatchers.IO) {
-            val journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
-                .getJournalEverything(
-                    APIKEY, "coronavirus"
+    suspend fun updateEverything(
+        language: String,
+        sortBy: String,
+        from: String,
+        to: String,
+        keyword: String
+    ): ResultWrapper<List<DatabaseNews>> {
+        if (language.isNotEmpty()) {
+            return safeApiCall(Dispatchers.IO) {
+                NewsMapper.networkNewsContainerAsDatabaseModel(
+                    apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
+                        .getJournalEverything(
+                            getCountryCode(language),
+                            sortBy,
+                            from,
+                            to,
+                            keyword,
+                            APIKEY
+                        )
                 )
-            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
-
+            }
+        } else {
+            return safeApiCall(Dispatchers.IO) {
+                NewsMapper.networkNewsContainerAsDatabaseModel(
+                    apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
+                        .getAllJournalEverything(
+                            sortBy,
+                            from,
+                            to,
+                            keyword,
+                            APIKEY
+                        )
+                )
+            }
         }
     }
 }
