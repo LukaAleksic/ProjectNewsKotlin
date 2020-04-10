@@ -8,10 +8,29 @@
     <fragment
         android:id="@+id/navigation_top_headlines"
         android:name="com.example.readnews.headlines.TopHeadlinesFragment"
-        tools:layout="@layout/fragment_top_headlines" />
+        android:label="Top Headlines"
+        tools:layout="@layout/fragment_top_headlines" >
+        <action
+            android:id="@+id/action_navigation_top_headlines_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_everything"
         android:name="com.example.readnews.everything.EverythingFragment"
-        tools:layout="@layout/fragment_everything" />
+        android:label="Every articles"
+        tools:layout="@layout/fragment_everything" >
+        <action
+            android:id="@+id/action_navigation_everything_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.readnews.details.DetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="article_url"
+            app:argType="string" />
+    </fragment>
 </navigation>

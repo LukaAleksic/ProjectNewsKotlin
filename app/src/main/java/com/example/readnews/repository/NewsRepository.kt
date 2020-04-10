@@ -6,7 +6,6 @@ import com.example.readnews.BuildConfig.BASE_URL
 import com.example.readnews.database.DatabaseNews
 import com.example.readnews.database.NewsDatabase
 import com.example.readnews.database.NewsMapper
-import com.example.readnews.repository.AbsRepository.ResultWrapper
 import com.example.readnews.domain.Article
 import com.example.readnews.network.*
 import com.example.readnews.util.APIKEY
@@ -45,8 +44,8 @@ class NewsRepository(
     }
 
     suspend fun updateNews(
-        businessFilter: String ="",
-        countryFilter: String=""
+        businessFilter: String = "",
+        countryFilter: String = ""
     ): ResultWrapper<List<DatabaseNews>> {
         return safeApiCall(Dispatchers.IO) {
             NewsMapper.networkNewsContainerAsDatabaseModel(apiAccess(businessFilter, countryFilter))
@@ -107,6 +106,7 @@ class NewsRepository(
             else -> cFilter = "fr"
         }
         return cFilter
+    }
 
     suspend fun refreshNewsEverything() {
         withContext(Dispatchers.IO) {
@@ -114,7 +114,7 @@ class NewsRepository(
                 .getJournalEverything(
                     APIKEY, "coronavirus"
                 )
-            database.newsDao.insertAll(NewsMapper.networkNewsContainerasDatabaseModel(journal))
+            database.newsDao.insertAll(NewsMapper.networkNewsContainerAsDatabaseModel(journal))
 
         }
     }

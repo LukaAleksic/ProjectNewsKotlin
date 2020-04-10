@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
@@ -80,7 +81,12 @@ class TopHeadlinesFragment : Fragment() {
 
         topHeadlinesAdapter =
             TopHeadlinesAdapter(NewsClick {
-                //TODO(navigation)
+                view!!.findNavController()
+                    .navigate(
+                        TopHeadlinesFragmentDirections.actionNavigationTopHeadlinesToDetailsFragment(
+                            it.url
+                        )
+                    )
             })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
