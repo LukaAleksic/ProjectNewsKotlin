@@ -56,7 +56,7 @@ class DetailsFragment : Fragment() {
         })
 
         binding.root.findViewById<TextView>(R.id.url).setOnClickListener {
-            searchSuccess()
+            startActivity(getSearchIntent())
         }
 
         return binding.root
@@ -65,10 +65,6 @@ class DetailsFragment : Fragment() {
     private fun getSearchIntent(): Intent {
         val args = DetailsFragmentArgs.fromBundle(arguments!!)
         return Intent(Intent.ACTION_VIEW, Uri.parse(args.articleUrl))
-    }
-
-    private fun searchSuccess() {
-        startActivity(getSearchIntent())
     }
 
     private fun cleanDateHour(date: String): String {
