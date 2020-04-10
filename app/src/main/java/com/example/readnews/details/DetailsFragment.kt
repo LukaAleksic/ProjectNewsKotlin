@@ -15,7 +15,6 @@ import com.example.readnews.R
 import com.example.readnews.databinding.FragmentDetailsBinding
 import com.example.readnews.domain.Article
 import com.example.readnews.util.DATE_FORMAT_DAY_MONTH_YEAR
-import kotlinx.android.synthetic.main.fragment_details.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -72,13 +71,13 @@ class DetailsFragment : Fragment() {
         startActivity(getSearchIntent())
     }
 
-    private fun cleanDateHour(date: String) : String{
+    private fun cleanDateHour(date: String): String {
         val dateHour = date.split("T")
-        val  yearMonthDay= dateHour[0].split("-")
-        val hourMinuteSecond = dateHour[1].replace("Z","")
+        val yearMonthDay = dateHour[0].split("-")
+        val hourMinuteSecond = dateHour[1].replace("Z", "")
 
         val c = Calendar.getInstance()
-        c.set(yearMonthDay[0].toInt(), yearMonthDay[1].toInt()-1, yearMonthDay[2].toInt())
+        c.set(yearMonthDay[0].toInt(), yearMonthDay[1].toInt() - 1, yearMonthDay[2].toInt())
         val cleanDate = getDateHourDisplay(c.time)
         return "$cleanDate, $hourMinuteSecond"
     }
