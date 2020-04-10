@@ -6,3 +6,4 @@ const val TRUNCATE_LENGTH = 130
 const val FRCOUNTRY = "fr"
 const val APIKEY = "2c64fe5d063645f58a5cd563308d0e7c"
 const val FRANCE_POSITION = 7
+const val DATE_FORMAT_DAY_MONTH_YEAR = "dd MMM yyyy"

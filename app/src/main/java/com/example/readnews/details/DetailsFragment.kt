@@ -14,6 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentDetailsBinding
 import com.example.readnews.domain.Article
+import com.example.readnews.util.DATE_FORMAT_DAY_MONTH_YEAR
+import kotlinx.android.synthetic.main.fragment_details.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DetailsFragment : Fragment() {
 
@@ -44,8 +48,11 @@ class DetailsFragment : Fragment() {
         viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.apply {
                 article = this.find { it.url == args.articleUrl }
-                if (article != null)
+                if (article != null) {
                     binding.news = article
+                    binding.publishedAt.text = cleanDateHour(article!!.publishedAt)
+                }
+
             }
         })
 
@@ -63,6 +70,21 @@ class DetailsFragment : Fragment() {
 
     private fun searchSuccess() {
         startActivity(getSearchIntent())
+    }
+
+    private fun cleanDateHour(date: String) : String{
+        val dateHour = date.split("T")
+        val  yearMonthDay= dateHour[0].split("-")
+        val hourMinuteSecond = dateHour[1].replace("Z","")
+
+        val c = Calendar.getInstance()
+        c.set(yearMonthDay[0].toInt(), yearMonthDay[1].toInt()-1, yearMonthDay[2].toInt())
+        val cleanDate = getDateHourDisplay(c.time)
+        return "$cleanDate, $hourMinuteSecond"
+    }
+
+    private fun getDateHourDisplay(date: Date): String {
+        return SimpleDateFormat(DATE_FORMAT_DAY_MONTH_YEAR, Locale.getDefault()).format(date)
     }
 
 
