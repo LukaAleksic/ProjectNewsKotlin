@@ -6,10 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentEverythingBinding
+import com.example.readnews.headlines.NewsClick
 import com.google.android.material.snackbar.Snackbar
 
 class EverythingFragment : Fragment() {
@@ -26,7 +28,7 @@ class EverythingFragment : Fragment() {
     /**
      * RecyclerView Adapter for converting a list of News to cards.
      */
-    private var viewModelAdapter: EverythingAdapter? = null
+    private var everythingAdapter: EverythingAdapter? = null
 
     /**
      * Called when the fragment's activity has been created and this
@@ -38,7 +40,7 @@ class EverythingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.let {
-                viewModelAdapter?.news = articles
+                everythingAdapter?.news = articles
             }
         })
     }
@@ -56,29 +58,39 @@ class EverythingFragment : Fragment() {
      *
      * @return Return the View for the fragment's UI.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding: FragmentEverythingBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_everything,
             container,
-            false)
+            false
+        )
         // Set the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
 
-        viewModelAdapter =
-            EverythingAdapter()
+        everythingAdapter =
+            EverythingAdapter(NewsClick {
+                view!!.findNavController()
+                    .navigate(
+                        EverythingFragmentDirections.actionNavigationEverythingToDetailsFragment(
+                            it.url
+                        )
+                    )
+            })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = viewModelAdapter
+            adapter = everythingAdapter
         }
 
 
         // Observer for the network error.
-        viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer{ isNetworkError ->
+        viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer { isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
 

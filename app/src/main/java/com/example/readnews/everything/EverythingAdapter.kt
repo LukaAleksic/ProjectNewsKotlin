@@ -6,11 +6,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.databinding.ReadnewsItemBinding
 import com.example.readnews.domain.Article
+import com.example.readnews.headlines.NewsClick
 
 /**
  * RecyclerView Adapter for setting up data binding on the items in the list.
  */
-class EverythingAdapter() : RecyclerView.Adapter<EverythingViewHolder>() {
+class EverythingAdapter(private val callback: NewsClick) :
+    RecyclerView.Adapter<EverythingViewHolder>() {
 
     /**
      * The news that our Adapter will show
@@ -48,6 +50,7 @@ class EverythingAdapter() : RecyclerView.Adapter<EverythingViewHolder>() {
     override fun onBindViewHolder(holder: EverythingViewHolder, position: Int) {
         holder.viewDataBinding.also {
             it.news = news[position]
+            it.newsCallback = callback
         }
     }
 
