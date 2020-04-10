@@ -10,17 +10,17 @@
     <string name="country">Country:</string>
     <string name="business">Business:</string>
     <string name="internet_error">Internet error</string>
-    <string name="sortBy">Sort by</string>
-    <string name="fromText">from</string>
-    <string name="toText">To</string>
-    <string name="keyword">Keyword(s) in article (*)</string>
+    <string name="sort_by">Sort by</string>
+    <string name="from_text">From</string>
+    <string name="to_text">To</string>
+    <string name="keyword">Keyword(s) (*)</string>
     <string name="hints">coronavirus;Macron</string>
     <string name="keywords_error">Please enter a keyword to filter on</string>
     <string name="date_error">The \"from\" date has to be before the \"to\" date</string>
     <string name="extend_description">extend/fold button</string>
 
     <string-array name="country_array">
-        <item>all</item>
+        <item>All</item>
         <item>Argentina</item>
         <item>Australia</item>
         <item>Austria</item>
@@ -52,7 +52,7 @@
         <item>technology</item>
     </string-array>
 
-    <string-array name="sortBy_array">
+    <string-array name="sort_by_array">
         <item>date</item>
         <item>relevancy</item>
         <item>popularity</item>

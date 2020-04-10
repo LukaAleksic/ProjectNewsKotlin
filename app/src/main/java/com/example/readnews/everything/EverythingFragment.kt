@@ -16,11 +16,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentEverythingBinding
+import com.example.readnews.util.DATE_FORMAT_DAY_MONTH_YEAR
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
 class EverythingFragment : Fragment() {
+
+    private val c = Calendar.getInstance()
+    private var currentYear: Int = 1
+    private var oldMonth: Int = 0
+    private var currentMonth: Int = 0
+    private var currentDay: Int = 1
+
+    private var maxDate: Long = 1
+    private var minDate: Long = 1
+
+    private lateinit var oldDate: Date
+    private lateinit var currentDate: Date
 
 
     private val viewModel: EverythingViewModel by lazy {
@@ -95,58 +108,20 @@ class EverythingFragment : Fragment() {
             if (isNetworkError) onNetworkError()
         })
 
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-
-        val maxDate = c.timeInMillis
-        c.add(Calendar.MONTH, -1)
-        val minDate = c.timeInMillis
-
-        val actualMonth = month + 1
-        val current = "$year-$actualMonth-$day"
-        val old = "$year-$month-$day"
+        assignDates()
 
         val fromBtn = binding.root.findViewById<Button>(R.id.fromButton)
         fromBtn.setOnClickListener {
-
-            val dpd = DatePickerDialog(
-                context!!,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    val realMonth = monthOfYear + 1
-                    // Display Selected date in TextView
-                    val txt = "$year-$realMonth-$dayOfMonth"
-                    fromBtn.text = txt
-                },
-                year,
-                month,
-                day
-            )
-            dpd.datePicker.minDate = minDate
-            dpd.datePicker.maxDate = maxDate
-            dpd.show()
+            onDateButtonClicked(fromBtn)
         }
 
         val toBtn = binding.root.findViewById<Button>(R.id.toButton)
         toBtn.setOnClickListener {
-
-            val dpd = DatePickerDialog(
-                context!!,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    val realMonth = monthOfYear + 1
-                    // Display Selected date in TextView
-                    val txt = "$year-$realMonth-$dayOfMonth"
-                    toBtn.text = txt
-                }, year, month, day
-            )
-            dpd.datePicker.minDate = minDate
-            dpd.datePicker.maxDate = maxDate
-            dpd.show()
+            onDateButtonClicked(toBtn)
         }
 
-        fromBtn.text = old
-        toBtn.text = current
+        fromBtn.text = getDateDisplay(oldDate)
+        toBtn.text = getDateDisplay(currentDate)
 
         binding.root.findViewById<Button>(R.id.filterButton).setOnClickListener {
             val country: String
@@ -166,7 +141,7 @@ class EverythingFragment : Fragment() {
                     sortBySpinner.selectedItem.toString()
                 from = fromButton.text.toString()
                 to = toButton.text.toString()
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                val sdf = SimpleDateFormat(DATE_FORMAT_DAY_MONTH_YEAR, Locale.getDefault())
                 if (sdf.parse(from).after(sdf.parse(to))) {
                     Snackbar.make(view!!, getString(R.string.date_error), Snackbar.LENGTH_LONG)
                         .show()
@@ -183,8 +158,8 @@ class EverythingFragment : Fragment() {
                 viewModel.filter(country, sortBy, from, to, keyword)
         }
 
-        val extendbutton = binding.root.findViewById<ImageButton>(R.id.extendButton)
-        extendbutton.setOnClickListener {
+        val extendButton = binding.root.findViewById<ImageButton>(R.id.extendButton)
+        extendButton.setOnClickListener {
             binding.apply {
                 if (extended) {
                     countryLayout.visibility = View.GONE
@@ -192,7 +167,7 @@ class EverythingFragment : Fragment() {
                     dateLayout.visibility = View.GONE
                     keywordLayout.visibility = View.GONE
                     extended = false
-                    extendbutton.setImageDrawable(
+                    extendButton.setImageDrawable(
                         ContextCompat.getDrawable(
                             context!!,
                             R.drawable.ic_extend_filter
@@ -204,7 +179,7 @@ class EverythingFragment : Fragment() {
                     dateLayout.visibility = View.VISIBLE
                     keywordLayout.visibility = View.VISIBLE
                     extended = true
-                    extendbutton.setImageDrawable(
+                    extendButton.setImageDrawable(
                         ContextCompat.getDrawable(
                             context!!,
                             R.drawable.ic_fold_filter
@@ -230,6 +205,40 @@ class EverythingFragment : Fragment() {
                 viewModel.onNetworkErrorShown()
             }
         }
+    }
+
+    private fun getDateDisplay(date: Date): String {
+        return SimpleDateFormat(DATE_FORMAT_DAY_MONTH_YEAR, Locale.getDefault()).format(date)
+    }
+
+    private fun assignDates() {
+        currentYear = c.get(Calendar.YEAR)
+        oldMonth = c.get(Calendar.MONTH)
+        currentMonth = oldMonth + 1
+        currentDay = c.get(Calendar.DAY_OF_MONTH)
+
+        currentDate = c.time
+        maxDate = c.timeInMillis
+        c.add(Calendar.MONTH, -1)
+        oldDate = c.time
+        minDate = c.timeInMillis
+    }
+
+    private fun onDateButtonClicked(btn: Button) {
+        val dpd = DatePickerDialog(
+            context!!,
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                // Display Selected date in TextView
+                c.set(year,monthOfYear,dayOfMonth)
+                btn.text = getDateDisplay(c.time)
+            },
+            currentYear,
+            oldMonth,
+            currentDay
+        )
+        dpd.datePicker.minDate = minDate
+        dpd.datePicker.maxDate = maxDate
+        dpd.show()
     }
 }
 
