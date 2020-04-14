@@ -116,6 +116,8 @@ class NewsRepository(
         to: String,
         keyword: String
     ): ResultWrapper<List<DatabaseNews>> {
+        val goodKeyword = keyword.replace(";", "+")
+
         if (language.isNotEmpty()) {
             return safeApiCall(Dispatchers.IO) {
                 NewsMapper.networkNewsContainerAsDatabaseModel(
@@ -125,7 +127,7 @@ class NewsRepository(
                             sortBy,
                             from,
                             to,
-                            keyword,
+                            goodKeyword,
                             APIKEY
                         )
                 )
@@ -138,7 +140,7 @@ class NewsRepository(
                             sortBy,
                             from,
                             to,
-                            keyword,
+                            goodKeyword,
                             APIKEY
                         )
                 )

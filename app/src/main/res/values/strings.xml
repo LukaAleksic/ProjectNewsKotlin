@@ -18,6 +18,9 @@
     <string name="keywords_error">Please enter a keyword to filter on</string>
     <string name="date_error">The \"from\" date has to be before the \"to\" date</string>
     <string name="extend_description">extend/fold button</string>
+    <string name="allCountries">All</string>
+    <string name="publishedAtString">date</string>
+    <string name="empty_keywords">Enter at least 1 keyword</string>
 
     <string-array name="country_array">
         <item>All</item>

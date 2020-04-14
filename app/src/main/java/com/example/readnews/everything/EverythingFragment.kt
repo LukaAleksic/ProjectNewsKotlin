@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -24,16 +25,20 @@ import java.util.*
 class EverythingFragment : Fragment() {
 
     private val c = Calendar.getInstance()
-    private var currentYear: Int = 1
-    private var oldMonth: Int = 0
-    private var currentMonth: Int = 0
-    private var currentDay: Int = 1
+    private var currentYear: Int? = null
+    private var oldMonth: Int? = null
+    private var currentMonth: Int? = null
+    private var currentDay: Int? = null
 
-    private var maxDate: Long = 1
-    private var minDate: Long = 1
+    private var maxDate: Long? = null
+    private var minDate: Long? = null
 
     private lateinit var oldDate: Date
     private lateinit var currentDate: Date
+
+    private lateinit var extendButton: ImageButton
+
+    private lateinit var binding: FragmentEverythingBinding
 
 
     private val viewModel: EverythingViewModel by lazy {
@@ -83,7 +88,7 @@ class EverythingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentEverythingBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_everything,
             container,
@@ -131,62 +136,48 @@ class EverythingFragment : Fragment() {
             val keyword: String
             var filter = true
             binding.apply {
-                country = if (countrySpinner.selectedItem.toString() == "all")
-                    ""
-                else
-                    countrySpinner.selectedItem.toString()
-                sortBy = if (sortBySpinner.selectedItem.toString() == "date")
-                    "publishedAt"
-                else
-                    sortBySpinner.selectedItem.toString()
+                country =
+                    if (countrySpinner.selectedItem.toString() == getString(R.string.allCountries)) {
+                        ""
+                    } else {
+                        countrySpinner.selectedItem.toString()
+                    }
+                sortBy =
+                    if (sortBySpinner.selectedItem.toString() == getString(R.string.publishedAtString)) {
+                        "publishedAt"
+                    } else {
+                        sortBySpinner.selectedItem.toString()
+                    }
+
                 from = fromButton.text.toString()
                 to = toButton.text.toString()
                 val sdf = SimpleDateFormat(DATE_FORMAT_DAY_MONTH_YEAR, Locale.getDefault())
                 if (sdf.parse(from).after(sdf.parse(to))) {
                     Snackbar.make(view!!, getString(R.string.date_error), Snackbar.LENGTH_LONG)
                         .show()
+                    binding.root.findViewById<TextView>(R.id.errorKeyword).visibility = View.GONE
                     filter = false
                 }
-                keyword = keywords.text.toString().replace(";", "+")
-                if (filter && keyword == "") {
+                keyword = keywords.text.toString()
+                if (filter && keyword.isEmpty()) {
+                    binding.root.findViewById<TextView>(R.id.errorKeyword).visibility = View.VISIBLE
                     Snackbar.make(view!!, getString(R.string.keywords_error), Snackbar.LENGTH_LONG)
                         .show()
                     filter = false
                 }
             }
-            if (filter)
+            if (filter) {
+                binding.root.findViewById<TextView>(R.id.errorKeyword).visibility = View.GONE
                 viewModel.filter(country, sortBy, from, to, keyword)
+            }
         }
 
-        val extendButton = binding.root.findViewById<ImageButton>(R.id.extendButton)
+        extendButton = binding.root.findViewById<ImageButton>(R.id.extendButton)
         extendButton.setOnClickListener {
-            binding.apply {
-                if (extended) {
-                    countryLayout.visibility = View.GONE
-                    sortLayout.visibility = View.GONE
-                    dateLayout.visibility = View.GONE
-                    keywordLayout.visibility = View.GONE
-                    extended = false
-                    extendButton.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context!!,
-                            R.drawable.ic_extend_filter
-                        )
-                    )
-                } else {
-                    countryLayout.visibility = View.VISIBLE
-                    sortLayout.visibility = View.VISIBLE
-                    dateLayout.visibility = View.VISIBLE
-                    keywordLayout.visibility = View.VISIBLE
-                    extended = true
-                    extendButton.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context!!,
-                            R.drawable.ic_fold_filter
-                        )
-                    )
-                }
-
+            if (extended) {
+                showExtendedLayout()
+            } else {
+                hideExtenderLayout()
             }
         }
 
@@ -214,7 +205,7 @@ class EverythingFragment : Fragment() {
     private fun assignDates() {
         currentYear = c.get(Calendar.YEAR)
         oldMonth = c.get(Calendar.MONTH)
-        currentMonth = oldMonth + 1
+        currentMonth = oldMonth!! + 1
         currentDay = c.get(Calendar.DAY_OF_MONTH)
 
         currentDate = c.time
@@ -229,16 +220,48 @@ class EverythingFragment : Fragment() {
             context!!,
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 // Display Selected date in TextView
-                c.set(year,monthOfYear,dayOfMonth)
+                c.set(year, monthOfYear, dayOfMonth)
                 btn.text = getDateDisplay(c.time)
             },
-            currentYear,
-            oldMonth,
-            currentDay
+            currentYear!!,
+            oldMonth!!,
+            currentDay!!
         )
-        dpd.datePicker.minDate = minDate
-        dpd.datePicker.maxDate = maxDate
+        dpd.datePicker.minDate = minDate!!
+        dpd.datePicker.maxDate = maxDate!!
         dpd.show()
+    }
+
+    private fun showExtendedLayout() {
+        binding.apply {
+            countryLayout.visibility = View.GONE
+            sortLayout.visibility = View.GONE
+            dateLayout.visibility = View.GONE
+            keywordLayout.visibility = View.GONE
+            extended = false
+            extendButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context!!,
+                    R.drawable.ic_extend_filter
+                )
+            )
+        }
+    }
+
+    private fun hideExtenderLayout() {
+        binding.apply {
+            countryLayout.visibility = View.VISIBLE
+            sortLayout.visibility = View.VISIBLE
+            dateLayout.visibility = View.VISIBLE
+            keywordLayout.visibility = View.VISIBLE
+            extended = true
+            extendButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context!!,
+                    R.drawable.ic_fold_filter
+                )
+            )
+        }
     }
 }
 

@@ -20,35 +20,6 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/countryLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/base_padding"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/countryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/country"
-                android:textColor="@color/text_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Spinner
-                android:id="@+id/countrySpinner"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:entries="@array/country_array"
-                android:gravity="center"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/countryText"
-                tools:layout_editor_absoluteY="0dp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sortLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +57,7 @@
                 android:id="@+id/fromText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="8dp"
                 android:text="@string/from_text"
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -97,7 +68,7 @@
                 android:id="@+id/fromButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="8dp"
                 android:text=""
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +79,7 @@
                 android:id="@+id/toText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/to_text"
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -119,7 +90,7 @@
                 android:id="@+id/toButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="8dp"
                 android:text=""
                 android:textColor="@color/text_black"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -147,17 +118,56 @@
             <EditText
                 android:id="@+id/keywords"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:autofillHints=""
                 android:ems="10"
                 android:hint="@string/hints"
                 android:inputType="textPersonName"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/keywordText"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/errorKeyword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_keywords"
+                android:textAlignment="center"
+                android:textColor="@color/text_red"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/keywords"
+                app:layout_constraintTop_toBottomOf="@id/keywords" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/countryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_padding"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/countryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/country"
+                android:textColor="@color/text_black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/countrySpinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:entries="@array/country_array"
+                android:gravity="center"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/countryText"
+                tools:layout_editor_absoluteY="0dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
@@ -174,7 +184,6 @@
             android:contentDescription="@string/extend_description"
             android:textAlignment="center"
             app:srcCompat="@drawable/ic_fold_filter" />
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
