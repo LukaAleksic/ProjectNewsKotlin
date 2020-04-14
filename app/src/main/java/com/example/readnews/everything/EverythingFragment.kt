@@ -70,17 +70,15 @@ class EverythingFragment : Fragment() {
         )
         // Set the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
 
         everythingAdapter =
-            EverythingAdapter(NewsClick {
-                view!!.findNavController()
-                    .navigate(
-                        EverythingFragmentDirections.actionNavigationEverythingToDetailsFragment(
-                            it.url
-                        )
+            EverythingAdapter(NewsClick { article ->
+                view?.findNavController()?.navigate(
+                    EverythingFragmentDirections.actionNavigationEverythingToDetailsFragment(
+                        article.url
                     )
+                )
             })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
@@ -99,12 +97,17 @@ class EverythingFragment : Fragment() {
 
 
     /**
-     * Method for displaying a Toast error message for network errors.
+     * Method for displaying a Snackbar error message for network errors.
      */
     private fun onNetworkError() {
-        viewModel.isNetworkErrorShown.value?.let { value ->
-            if (!value) {
-                Snackbar.make(view!!, getString(R.string.network_error), Snackbar.LENGTH_LONG)
+        view?.let { nonNullView ->
+            val value = viewModel.isNetworkErrorShown.value
+            if (value != null && !value) {
+                Snackbar.make(
+                    nonNullView,
+                    getString(R.string.network_error),
+                    Snackbar.LENGTH_LONG
+                )
                     .show()
                 viewModel.onNetworkErrorShown()
             }

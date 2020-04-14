@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentTopHeadlinesBinding
 import com.example.readnews.util.FRANCE_POSITION
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_top_headlines.*
 
 
@@ -76,17 +76,15 @@ class TopHeadlinesFragment : Fragment() {
         )
         // Set the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
 
         topHeadlinesAdapter =
-            TopHeadlinesAdapter(NewsClick {
-                view!!.findNavController()
-                    .navigate(
-                        TopHeadlinesFragmentDirections.actionNavigationTopHeadlinesToDetailsFragment(
-                            it.url
-                        )
+            TopHeadlinesAdapter(NewsClick { article ->
+                view?.findNavController()?.navigate(
+                    TopHeadlinesFragmentDirections.actionNavigationTopHeadlinesToDetailsFragment(
+                        article.url
                     )
+                )
             })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
@@ -118,12 +116,17 @@ class TopHeadlinesFragment : Fragment() {
     }
 
     /**
-     * Method for displaying a Toast error message for network errors.
+     * Method for displaying a Snackbar error message for network errors.
      */
     private fun onNetworkError() {
-        viewModel.isNetworkErrorShown.value?.let { value ->
-            if (!value) {
-                Toast.makeText(activity, getString(R.string.network_error), Toast.LENGTH_LONG)
+        view?.let { nonNullView ->
+            val value = viewModel.isNetworkErrorShown.value
+            if (value != null && !value) {
+                Snackbar.make(
+                    nonNullView,
+                    getString(R.string.network_error),
+                    Snackbar.LENGTH_LONG
+                )
                     .show()
                 viewModel.onNetworkErrorShown()
             }
@@ -131,9 +134,14 @@ class TopHeadlinesFragment : Fragment() {
     }
 
     private fun onGenericError() {
-        viewModel.isGenericErrorShown.value?.let { value ->
-            if (!value) {
-                Toast.makeText(activity, getString(R.string.generic_error), Toast.LENGTH_LONG)
+        view?.let { nonNullView ->
+            val value = viewModel.isGenericErrorShown.value
+            if (value != null && !value) {
+                Snackbar.make(
+                    nonNullView,
+                    getString(R.string.generic_error),
+                    Snackbar.LENGTH_LONG
+                )
                     .show()
                 viewModel.onGenericErrorShown()
             }

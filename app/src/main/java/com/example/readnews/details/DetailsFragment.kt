@@ -38,11 +38,9 @@ class DetailsFragment : Fragment() {
             false
         )
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
 
         val args = DetailsFragmentArgs.fromBundle(arguments!!)
-
         var article: Article?
         viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.apply {
@@ -54,7 +52,6 @@ class DetailsFragment : Fragment() {
 
             }
         })
-
         binding.root.findViewById<TextView>(R.id.url).setOnClickListener {
             startActivity(getSearchIntent())
         }
