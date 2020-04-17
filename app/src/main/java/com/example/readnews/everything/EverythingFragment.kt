@@ -218,12 +218,14 @@ class EverythingFragment : Fragment() {
             dateLayout.visibility = View.GONE
             keywordLayout.visibility = View.GONE
             extended = false
-            extendButton.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context!!,
-                    R.drawable.ic_extend_filter
+            context?.let { context ->
+                extendButton.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_extend_filter
+                    )
                 )
-            )
+            }
         }
     }
 
