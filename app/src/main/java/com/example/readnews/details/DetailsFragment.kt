@@ -45,11 +45,13 @@ class DetailsFragment : Fragment() {
         viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.apply {
                 article = this.find { it.url == args.articleUrl }
-                if (article != null) {
+                article?.let{
+                    article ->
                     binding.news = article
-                    binding.publishedAt.text = cleanDateHour(article!!.publishedAt)
+                    if(article.publishedAt != null) {
+                        binding.publishedAt.text = cleanDateHour(article.publishedAt)
+                    }
                 }
-
             }
         })
         binding.root.findViewById<TextView>(R.id.url).setOnClickListener {
