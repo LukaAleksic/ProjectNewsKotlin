@@ -10,12 +10,12 @@ import androidx.room.PrimaryKey
 data class DatabaseNews(
 
     val author: String?,
-    val title: String,
+    val title: String?,
     val description: String?,
     @PrimaryKey
     val url: String,
     val urlToImage: String?,
-    val publishedAt: String,
+    val publishedAt: String?,
     val content: String?
 )
 
