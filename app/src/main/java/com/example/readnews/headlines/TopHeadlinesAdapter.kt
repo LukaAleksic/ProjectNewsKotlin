@@ -10,7 +10,7 @@ import com.example.readnews.domain.Article
 /**
  * RecyclerView Adapter for setting up data binding on the items in the list.
  */
-class TopHeadlinesAdapter(val callback: NewsClick) :
+class TopHeadlinesAdapter(private val callback: NewsClick) :
     RecyclerView.Adapter<TopHeadlinesViewHolder>() {
 
     /**

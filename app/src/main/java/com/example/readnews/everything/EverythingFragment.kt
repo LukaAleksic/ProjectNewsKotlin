@@ -13,10 +13,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.readnews.R
 import com.example.readnews.databinding.FragmentEverythingBinding
+import com.example.readnews.headlines.NewsClick
 import com.example.readnews.util.DATE_FORMAT_DAY_MONTH_YEAR
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
@@ -42,7 +44,7 @@ class EverythingFragment : Fragment() {
     /**
      * RecyclerView Adapter for converting a list of News to cards.
      */
-    private var viewModelAdapter: EverythingAdapter? = null
+    private var everythingAdapter: EverythingAdapter? = null
 
     private var extended = true
 
@@ -56,7 +58,7 @@ class EverythingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel.journal.observe(viewLifecycleOwner, Observer { articles ->
             articles?.let {
-                viewModelAdapter?.news = articles
+                everythingAdapter?.news = articles
             }
         })
     }
@@ -86,15 +88,20 @@ class EverythingFragment : Fragment() {
         )
         // Set the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
 
-        viewModelAdapter =
-            EverythingAdapter()
+        everythingAdapter =
+            EverythingAdapter(NewsClick { article ->
+                view?.findNavController()?.navigate(
+                    EverythingFragmentDirections.actionNavigationEverythingToDetailsFragment(
+                        article.url
+                    )
+                )
+            })
 
         binding.root.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = viewModelAdapter
+            adapter = everythingAdapter
         }
 
 
@@ -176,12 +183,17 @@ class EverythingFragment : Fragment() {
 
 
     /**
-     * Method for displaying a Toast error message for network errors.
+     * Method for displaying a Snackbar error message for network errors.
      */
     private fun onNetworkError() {
-        viewModel.isNetworkErrorShown.value?.let { value ->
-            if (!value) {
-                Snackbar.make(view!!, getString(R.string.network_error), Snackbar.LENGTH_LONG)
+        view?.let { nonNullView ->
+            val value = viewModel.isNetworkErrorShown.value
+            if (value != null && !value) {
+                Snackbar.make(
+                    nonNullView,
+                    getString(R.string.network_error),
+                    Snackbar.LENGTH_LONG
+                )
                     .show()
                 viewModel.onNetworkErrorShown()
             }

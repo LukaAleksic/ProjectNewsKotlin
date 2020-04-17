@@ -8,7 +8,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.example.android.devbyteviewer"
+        applicationId "com.example.readnews"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
