@@ -17,7 +17,7 @@ interface NewsDao {
     fun deleteAll()
 }
 
-@Database(entities = [DatabaseNews::class], version = 7, exportSchema = false)
+@Database(entities = [DatabaseNews::class], version = 9, exportSchema = false)
 abstract class NewsDatabase : RoomDatabase() {
     abstract val newsDao: NewsDao
 }

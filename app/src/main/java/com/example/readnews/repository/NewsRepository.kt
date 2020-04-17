@@ -12,6 +12,7 @@ import com.example.readnews.util.APIKEY
 import com.example.readnews.util.FRCOUNTRY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 class NewsRepository(
@@ -108,14 +109,41 @@ class NewsRepository(
         return cFilter
     }
 
-    suspend fun refreshNewsEverything() {
-        withContext(Dispatchers.IO) {
-            val journal = apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
-                .getJournalEverything(
-                    APIKEY, "coronavirus"
+    suspend fun updateEverything(
+        language: String,
+        sortBy: String,
+        from: String,
+        to: String,
+        keyword: String
+    ): ResultWrapper<List<DatabaseNews>> {
+        val goodKeyword = keyword.replace(";", "+")
+        if (language.isNotEmpty()) {
+            return safeApiCall(Dispatchers.IO) {
+                NewsMapper.networkNewsContainerAsDatabaseModel(
+                    apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
+                        .getJournalEverything(
+                            getCountryCode(language),
+                            sortBy,
+                            from,
+                            to,
+                            goodKeyword,
+                            APIKEY
+                        )
                 )
-            database.newsDao.insertAll(NewsMapper.networkNewsContainerAsDatabaseModel(journal))
-
+            }
+        } else {
+            return safeApiCall(Dispatchers.IO) {
+                NewsMapper.networkNewsContainerAsDatabaseModel(
+                    apiProvider.buildApi(BASE_URL, ReadNewsService::class.java)
+                        .getAllJournalEverything(
+                            sortBy,
+                            from,
+                            to,
+                            goodKeyword,
+                            APIKEY
+                        )
+                )
+            }
         }
     }
 }

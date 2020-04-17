@@ -1,4 +1,3 @@
-
 package com.example.readnews.everything
 
 import android.app.Application
@@ -6,10 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.readnews.database.getDatabase
+import com.example.readnews.repository.AbsRepository
 import com.example.readnews.repository.NewsRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.io.IOException
 
 
 class EverythingViewModel(application: Application) : AndroidViewModel(application) {
@@ -56,32 +55,15 @@ class EverythingViewModel(application: Application) : AndroidViewModel(applicati
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
 
-    /**
-     * init{} is called immediately when this ViewModel is created.
-     */
-    init {
-        refreshDataFromRepository()
-    }
+    private var _eventGenericError = MutableLiveData(false)
+    val eventGenericError: LiveData<Boolean>
+        get() = _eventGenericError
 
-    /**
-     * Refresh data from the repository. Use a coroutine launch to run in a
-     * background thread.
-     */
-    private fun refreshDataFromRepository() {
-        viewModelScope.launch {
-            try {
-                newsRepository.refreshNewsEverything()
-                Timber.d("Refresh")
-                _eventNetworkError.value = false
-                _isNetworkErrorShown.value = false
+    private var _isGenericErrorShown = MutableLiveData(false)
 
-            } catch (networkError: IOException) {
-                // Show a Toast error message and hide the progress bar.
-                if(journal.value.isNullOrEmpty())
-                    _eventNetworkError.value = true
-            }
-        }
-    }
+    val isGenericErrorShown: LiveData<Boolean>
+        get() = _isNetworkErrorShown
+
 
     /**
      * Resets the network error flag.
@@ -109,5 +91,27 @@ class EverythingViewModel(application: Application) : AndroidViewModel(applicati
      * A journal of news displayed on the screen.
      */
     val journal = newsRepository.news
+
+    fun filter(countryFilter: String, sortBy: String, from: String, to: String, keyword: String) {
+        viewModelScope.launch {
+            val apiResponse =
+                newsRepository.updateEverything(countryFilter, sortBy, from, to, keyword)
+            when (apiResponse) {
+                is AbsRepository.ResultWrapper.NetworkError ->                 // Show a Toast error message and hide the progress bar.
+                    _eventNetworkError.value = true
+                is AbsRepository.ResultWrapper.GenericError -> {
+                    Timber.e(apiResponse.error.toString())
+                    _eventGenericError.value = true
+                }
+                is AbsRepository.ResultWrapper.Success -> {
+                    newsRepository.updateDatabase(apiResponse.value)
+                    _isNetworkErrorShown.value = false
+                    _eventNetworkError.value = false
+                    _isGenericErrorShown.value = false
+                    _eventGenericError.value = false
+                }
+            }
+        }
+    }
 
 }

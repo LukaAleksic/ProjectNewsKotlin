@@ -20,13 +20,12 @@ data class NetworkNewsContainer(val articles: List<NetworkNews>)
 
 @JsonClass(generateAdapter = true)
 data class NetworkNews(
-    //val source: String,
     @Json(name = "author") val author: String? = null,
-    val title: String,
+    @Json(name = "title") val title: String? = null,
     @Json(name = "description") val description: String? = null,
     val url: String,
     @Json(name = "urlToImage") val urlToImage: String? = null,
-    val publishedAt: String,
+    @Json(name = "publishedAt") val publishedAt: String? = null,
     @Json(name = "content") val content: String? = null
 )
 
