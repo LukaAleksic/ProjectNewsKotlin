@@ -21,6 +21,7 @@
     <string name="allCountries">All</string>
     <string name="publishedAtString">date</string>
     <string name="empty_keywords">Enter at least 1 keyword</string>
+    <string name="publishedAt">publishedAt</string>
 
     <string-array name="country_array">
         <item>All</item>

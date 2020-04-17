@@ -24,17 +24,7 @@ import java.util.*
 
 class EverythingFragment : Fragment() {
 
-    private val c = Calendar.getInstance()
-    private var currentYear: Int? = null
-    private var oldMonth: Int? = null
-    private var currentMonth: Int? = null
-    private var currentDay: Int? = null
-
-    private var maxDate: Long? = null
-    private var minDate: Long? = null
-
-    private lateinit var oldDate: Date
-    private lateinit var currentDate: Date
+    private lateinit var c : Calendar
 
     private lateinit var extendButton: ImageButton
 
@@ -113,7 +103,7 @@ class EverythingFragment : Fragment() {
             if (isNetworkError) onNetworkError()
         })
 
-        assignDates()
+        c = Calendar.getInstance()
 
         val fromBtn = binding.root.findViewById<Button>(R.id.fromButton)
         fromBtn.setOnClickListener {
@@ -125,8 +115,8 @@ class EverythingFragment : Fragment() {
             onDateButtonClicked(toBtn)
         }
 
-        fromBtn.text = getDateDisplay(oldDate)
-        toBtn.text = getDateDisplay(currentDate)
+        fromBtn.text = getDateDisplay(getOldDate())
+        toBtn.text = getDateDisplay(getCurrentDate())
 
         binding.root.findViewById<Button>(R.id.filterButton).setOnClickListener {
             val country: String
@@ -144,7 +134,7 @@ class EverythingFragment : Fragment() {
                     }
                 sortBy =
                     if (sortBySpinner.selectedItem.toString() == getString(R.string.publishedAtString)) {
-                        "publishedAt"
+                        getString(R.string.publishedAt)
                     } else {
                         sortBySpinner.selectedItem.toString()
                     }
@@ -175,9 +165,9 @@ class EverythingFragment : Fragment() {
         extendButton = binding.root.findViewById<ImageButton>(R.id.extendButton)
         extendButton.setOnClickListener {
             if (extended) {
-                showExtendedLayout()
+                hideExtendedLayout()
             } else {
-                hideExtenderLayout()
+                showExtendedLayout()
             }
         }
 
@@ -202,37 +192,26 @@ class EverythingFragment : Fragment() {
         return SimpleDateFormat(DATE_FORMAT_DAY_MONTH_YEAR, Locale.getDefault()).format(date)
     }
 
-    private fun assignDates() {
-        currentYear = c.get(Calendar.YEAR)
-        oldMonth = c.get(Calendar.MONTH)
-        currentMonth = oldMonth!! + 1
-        currentDay = c.get(Calendar.DAY_OF_MONTH)
-
-        currentDate = c.time
-        maxDate = c.timeInMillis
-        c.add(Calendar.MONTH, -1)
-        oldDate = c.time
-        minDate = c.timeInMillis
-    }
 
     private fun onDateButtonClicked(btn: Button) {
         val dpd = DatePickerDialog(
             context!!,
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 // Display Selected date in TextView
-                c.set(year, monthOfYear, dayOfMonth)
-                btn.text = getDateDisplay(c.time)
+                val privCal = Calendar.getInstance()
+                privCal.set(year, monthOfYear, dayOfMonth)
+                btn.text = getDateDisplay(privCal.time)
             },
-            currentYear!!,
-            oldMonth!!,
-            currentDay!!
+            c.get(Calendar.YEAR),
+            c.get(Calendar.MONTH),
+            c.get(Calendar.DAY_OF_MONTH)
         )
-        dpd.datePicker.minDate = minDate!!
-        dpd.datePicker.maxDate = maxDate!!
+        dpd.datePicker.minDate = getMinDateInMillis()
+        dpd.datePicker.maxDate = getMaxDateInMillis()
         dpd.show()
     }
 
-    private fun showExtendedLayout() {
+    private fun hideExtendedLayout() {
         binding.apply {
             countryLayout.visibility = View.GONE
             sortLayout.visibility = View.GONE
@@ -248,20 +227,44 @@ class EverythingFragment : Fragment() {
         }
     }
 
-    private fun hideExtenderLayout() {
+    private fun showExtendedLayout() {
         binding.apply {
             countryLayout.visibility = View.VISIBLE
             sortLayout.visibility = View.VISIBLE
             dateLayout.visibility = View.VISIBLE
             keywordLayout.visibility = View.VISIBLE
             extended = true
-            extendButton.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context!!,
-                    R.drawable.ic_fold_filter
+            context?.let { context ->
+                extendButton.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_fold_filter
+                    )
                 )
-            )
+            }
         }
+    }
+
+    private fun getMinDateInMillis() : Long {
+        c.add(Calendar.MONTH, -1)
+        val minDate = c.timeInMillis
+        c.add(Calendar.MONTH, +1)
+        return minDate as Long
+    }
+
+    private fun getMaxDateInMillis() : Long {
+        return c.timeInMillis
+    }
+
+    private fun getCurrentDate() : Date {
+        return c.time
+    }
+
+    private fun getOldDate() : Date {
+        c.add(Calendar.MONTH, -1)
+        val oldDate =  c.time
+        c.add(Calendar.MONTH, +1)
+        return oldDate
     }
 }
 
